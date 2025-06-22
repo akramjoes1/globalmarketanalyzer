@@ -24,7 +24,7 @@
     </style>
     <!-- React and ReactDOM CDNs -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react.production.min.js"></script>
     <!-- Babel for JSX transformation in the browser (for development only) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
@@ -43,7 +43,7 @@
             </svg>
         );
         const StethoscopeIcon = (props) => (
-            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-stethoscope">
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucude-stethoscope">
                 <path d="M2 12s2 10 9 10 7-10 7-10"/><path d="M18 12c-3 0-5 2-8 2s-5-2-8-2"/><path d="M12 10V2"/><path d="M16 4h2a2 2 0 0 1 2 2v3"/><path d="M8 4H6a2 2 0 0 0-2 2v3"/>
             </svg>
         );
@@ -421,7 +421,20 @@
                                     }
                                 }
                             };
-                            const apiKey = "AIzaSyBosQQfG2P_kffhRLWhN6iJr7-zPSDgn80"; // IMPORTANT: Replace with your actual API key here.
+                            // NOTE for GitHub Pages: process.env is not available in standard browser environments.
+                            // If deploying to GitHub Pages without a build step that injects this,
+                            // the API key will be an empty string, and dynamic reports will not load.
+                            // To make them load, you would need to hardcode the API key here,
+                            // which is NOT secure and GitHub will flag it again.
+                            const apiKey = process.env.REACT_APP_GEMINI_API_KEY || ""; 
+                            if (!apiKey) {
+                                console.error("Gemini API Key is not set in environment variables!");
+                                // Do NOT throw an error here, just log, so the rest of the site loads on GitHub Pages
+                                // The reports simply won't fetch.
+                                setReportError("API Key is missing. Dynamic reports cannot be loaded. Please ensure REACT_APP_GEMINI_API_KEY is set in your build environment (e.g., Netlify).");
+                                return []; // Return empty array to prevent further API calls
+                            }
+
                             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                             const response = await fetch(apiUrl, {
@@ -460,11 +473,13 @@
                             }
                         } catch (error) {
                             console.error(`Attempt ${attempts + 1} failed for batch starting at offset ${offset}:`, error);
+                            setReportError(`Failed to load reports: ${error.message}. Dynamic reports require an API key to be set in the environment. On GitHub Pages, this part won't work securely without a backend.`);
                             attempts++;
                             if (attempts < maxRetries) {
                                 await new Promise(res => setTimeout(res, 3000 * attempts)); // Exponential backoff for retries
                             } else {
-                                throw error; // Re-throw if max retries reached
+                                // Do not re-throw error if max retries reached, just update state and return empty
+                                return [];
                             }
                         }
                     }
@@ -485,6 +500,8 @@
                         setTotalReportsGenerated(initialReports.length);
                         setReportsLoadedCount(initialReports.length);
                     } catch (error) {
+                        // Error handling is now primarily within fetchDynamicMedicalReports
+                        // This outer catch catches errors from static reports or initial setup
                         setReportError("Failed to load initial reports. Please try refreshing or check your network/API key. Details: " + error.message);
                     } finally {
                         setIsLoadingReports(false);
@@ -494,14 +511,14 @@
                 // Function to load more reports when button is clicked
                 const handleLoadMoreReports = async () => {
                     setIsLoadingReports(true);
-                    setReportError(null);
+                    setReportError(null); // Clear previous error
                     try {
                         const newBatch = await fetchDynamicMedicalReports(batchSize, totalReportsGenerated);
                         setMedicalReports(prevReports => [...prevReports, ...newBatch]);
                         setTotalReportsGenerated(prevCount => prevCount + newBatch.length);
                         setReportsLoadedCount(prevCount => prevCount + newBatch.length);
                     } catch (error) {
-                        setReportError("Failed to load more reports. Please try again. Details: " + error.message);
+                        // Error already handled and set within fetchDynamicMedicalReports
                     } finally {
                         setIsLoadingReports(false);
                     }
@@ -650,7 +667,7 @@
                                 <div className="text-center py-8 text-red-600">
                                     <p className="font-semibold">Error Loading Reports:</p>
                                     <p>{reportError}</p>
-                                    <p className="text-sm text-gray-500 mt-2">Please ensure your internet connection is stable, your API key is correct, and try refreshing the page or clicking "Load More Reports".</p>
+                                    <p className="text-sm text-gray-500 mt-2">The dynamic medical reports feature relies on an API key that needs to be securely configured in a build environment like Netlify. GitHub Pages does not support this directly for client-side JavaScript, so the reports will not fetch securely here.</p>
                                 </div>
                             ) : filteredMedicalReports.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -832,7 +849,8 @@
                             <p>The Site is provided on an "AS IS" and "AS AVAILABLE" basis. We make no representations or warranties of any kind, express or implied, as to the operation of the Site or the information, content, materials, or products included on the Site.</p>
 
                             <h4>Limitation of Liability</h4>
-                            <p>In no event shall Wellpedia, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Site; (ii) any conduct or content of any third party on the Site; (iii) any content obtained from the Site; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage, and even if a remedy set forth herein is found to have failed of its essential purpose.</p>
+                            <p>In no event shall Wellpedia, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Site; (ii) any conduct or content of any third party on the Site; (iii) any content obtained from the Site; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage, and even if a remedy set forth herein is.
+</p>
 
                             <h4>Changes to Terms</h4>
                             <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Site after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Site.</p>
