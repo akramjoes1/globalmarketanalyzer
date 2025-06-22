@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellpedia</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom animation for fading in health tips */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
+    <!-- React and ReactDOM CDNs -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX transformation in the browser (for development only) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- DEBUGGING START ---
+        console.log("Babel script is running!");
+        // --- DEBUGGING END ---
+
+        // Inline SVG Icons (replacing Lucide React for self-containment)
+        const BookOpenIcon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-book-open">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+        );
+        const StethoscopeIcon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-stethoscope">
+                <path d="M2 12s2 10 9 10 7-10 7-10"/><path d="M18 12c-3 0-5 2-8 2s-5-2-8-2"/><path d="M12 10V2"/><path d="M16 4h2a2 2 0 0 1 2 2v3"/><path d="M8 4H6a2 2 0 0 0-2 2v3"/>
+            </svg>
+        );
+        const PlusCircleIcon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus-circle">
+                <circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/>
+            </svg>
+        );
+        const XCircleIcon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-circle">
+                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+            </svg>
+        );
+        const SearchIcon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+        );
+        const InfoIcon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-info">
+                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+            </svg>
+        );
+        const MailIcon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail">
+                <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+        );
+        const FileTextIcon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text">
+                <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>
+            </svg>
+        );
+        const ShieldIcon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shield">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+        );
+
+
+        // Main App Component
+        const App = () => {
+            const { useState, useEffect } = React;
+
+            // State to hold blog posts and medical reports
+            const [blogs, setBlogs] = useState([]);
+            const [medicalReports, setMedicalReports] = useState([]);
+            // State for modal visibility for adding content
+            const [showAddContentModal, setShowAddContentModal] = useState(false);
+            // State for current content type to add
+            const [addContentType, setAddContentType] = useState('');
+            // State for search term
+            const [searchTerm, setSearchTerm] = useState('');
+            // State to hold the content object to display in the detailed content modal
+            const [selectedContent, setSelectedContent] = useState(null);
+            // Loading state for dynamic reports
+            const [isLoadingReports, setIsLoadingReports] = useState(false);
+            // Error state for dynamic reports
+            const [reportError, setReportError] = useState(null);
+            // Progress tracking for reports
+            const [reportsLoadedCount, setReportsLoadedCount] = useState(0);
+            const batchSize = 50; // Number of reports to load per API call
+            const [totalReportsGenerated, setTotalReportsGenerated] = useState(0);
+
+            // NEW: States for Privacy Policy and Terms of Service modals
+            const [showPrivacyPolicyModal, setShowPrivacyPolicyModal] = useState(false);
+            const [showTermsOfServiceModal, setShowTermsOfServiceModal] = useState(false);
+
+
+            // Array of health tips to cycle through
+            const healthTips = [
+                "Explore insightful articles, latest medical research, and practical tips to empower your health journey.",
+                "Discover delicious and healthy recipes to nourish your body and mind.",
+                "Learn effective stress management techniques for a calmer, happier you.",
+                "Find personalized exercise tips to boost your energy and improve fitness.",
+                "Stay informed about the latest breakthroughs in medical science and wellness."
+            ];
+            // State for the currently displayed health tip
+            const [currentTipIndex, setCurrentTipIndex] = useState(0);
+
+            // Effect to change health tip every minute
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setCurrentTipIndex(prevIndex => (prevIndex + 1) % healthTips.length);
+                }, 60 * 1000); // Change every 60 seconds (1 minute)
+
+                // Cleanup function to clear the interval when the component unmounts
+                return () => clearInterval(interval);
+            }, [healthTips.length]);
+
+
+            // Simulate fetching "automatic" content from the internet
+            useEffect(() => {
+                const fetchAutomaticBlogs = async () => {
+                    // This mock data remains static for blogs
+                    return [
+                        {
+                            id: 'auto-blog-1',
+                            title: 'The Benefits of Mindful Eating',
+                            author: 'Wellness Explorer',
+                            date: '2025-06-15',
+                            content: `Mindful eating is an approach to food that focuses on your sensory experience of eating. It's about paying attention to the taste, smell, and texture of your food, as well as your body's hunger and fullness cues. This practice can lead to better digestion, increased satisfaction, and a healthier relationship with food. It encourages you to slow down, savor each bite, and truly appreciate your meals. By reducing distractions during mealtimes, you can become more aware of how different foods affect your body and mood.`,
+                            imageUrl: 'https://placehold.co/600x400/FFF8DC/333333?text=Mindful+Eating',
+                            tags: ['nutrition', 'mindfulness']
+                        },
+                        {
+                            id: 'auto-blog-2',
+                            title: 'Top 5 Exercises for Joint Health',
+                            author: 'Fitness Guru',
+                            date: '2025-06-20',
+                            content: `Maintaining joint health is crucial for overall mobility and quality of life. Regular, low-impact exercises can help strengthen the muscles around your joints, providing better support and reducing strain. Activities like swimming, cycling, walking, and yoga are excellent choices. They promote flexibility and range of motion without putting excessive stress on your joints. Incorporating strength training with light weights can also build muscle mass, further protecting your joints. Always listen to your body and consult a professional if you experience pain.`,
+                            imageUrl: 'https://placehold.co/600x400/ADD8E6/333333?text=Joint+Health',
+                            tags: ['exercise', 'joints']
+                        },
+                        {
+                            id: 'auto-blog-3',
+                            title: 'Understanding Diabetes Mellitus: A Comprehensive Guide',
+                            author: 'Endocrinology Insights',
+                            date: '2025-06-22',
+                            content: `Diabetes mellitus is a chronic condition characterized by high blood sugar levels. This blog post delves into the different types of diabetes (Type 1, Type 2, Gestational), their causes, symptoms, and management strategies. It covers the importance of diet, exercise, medication, and regular monitoring in controlling blood glucose levels and preventing complications. Understanding the disease is the first step towards effective management and a healthy life.`,
+                            imageUrl: 'https://placehold.co/600x400/FFB6C1/333333?text=Diabetes+Care',
+                            tags: ['diabetes', 'chronic disease', 'management']
+                        },
+                        {
+                            id: 'auto-blog-4',
+                            title: 'The Importance of Mosquito Nets for Pregnant Women',
+                            author: 'Public Health Advocate',
+                            date: '2025-06-21',
+                            content: `Malaria poses a significant threat to pregnant women and their unborn children. This article highlights the critical role of insecticide-treated mosquito nets (ITNs) in preventing malaria during pregnancy. It discusses how ITNs reduce mosquito bites, thereby lowering the risk of maternal anemia, low birth weight, and stillbirth. Proper and consistent use of mosquito nets is a simple yet highly effective intervention for protecting vulnerable populations.`,
+                            imageUrl: 'https://placehold.co/600x400/98FB98/333333?text=Mosquito+Nets',
+                            tags: ['malaria', 'pregnancy', 'prevention']
+                        },
+                        {
+                            id: 'auto-blog-5',
+                            title: 'Safe Waste Disposal at Home: A Health Imperative',
+                            author: 'Environmental Health Team',
+                            date: '2025-06-18',
+                            content: `Improper waste disposal can lead to serious health hazards, including the spread of diseases, air pollution, and contamination of water sources. This guide provides practical tips for safe waste disposal and management in households, emphasizing segregation, recycling, and responsible waste reduction. It covers common mistakes to avoid and promotes practices that protect both human health and the environment, such as composting organic waste and proper handling of hazardous materials.`,
+                            imageUrl: 'https://placehold.co/600x400/C0C0C0/333333?text=Waste+Management',
+                            tags: ['environmental health', 'waste management', 'hygiene']
+                        },
+                        {
+                            id: 'auto-blog-6',
+                            title: 'The Role of Sleep in Mental Wellness',
+                            author: 'Sleep Scientist',
+                            date: '2025-06-17',
+                            content: `Adequate sleep is fundamental for mental and emotional resilience. This article explores how sleep deprivation can impact mood, cognitive function, and stress levels. It delves into the stages of sleep and their importance in memory consolidation and emotional regulation, offering practical tips for improving sleep hygiene and fostering a restorative night's rest.`,
+                            imageUrl: 'https://placehold.co/600x400/E6E6FA/333333?text=Sleep+Wellness',
+                            tags: ['sleep', 'mental health', 'wellness']
+                        },
+                        {
+                            id: 'auto-blog-7',
+                            title: 'Decoding Food Labels: A Guide to Healthier Choices',
+                            author: 'Nutrition Expert',
+                            date: '2025-06-16',
+                            content: `Navigating the grocery store can be daunting with complex food labels. This guide simplifies understanding nutritional information, ingredient lists, and health claims. It empowers consumers to make informed choices, identify hidden sugars and unhealthy fats, and select foods that truly support their dietary goals.`,
+                            imageUrl: 'https://placehold.co/600x400/FFE4E1/333333?text=Food+Labels',
+                            tags: ['nutrition', 'diet', 'healthy eating']
+                        },
+                        {
+                            id: 'auto-blog-8',
+                            title: 'The Power of Hydration: More Than Just Water',
+                            author: 'Hydration Coach',
+                            date: '2025-06-14',
+                            content: `Hydration is vital for every bodily function, yet often overlooked. This blog post explores the diverse benefits of proper hydration, from maintaining energy levels and aiding digestion to supporting skin health and cognitive function. It also discusses various sources of hydration beyond plain water and practical tips to increase daily fluid intake.`,
+                            imageUrl: 'https://placehold.co/600x400/B0E0E6/333333?text=Hydration',
+                            tags: ['hydration', 'wellness', 'daily habits']
+                        },
+                        {
+                            id: 'auto-blog-9',
+                            title: 'Building Immunity: A Holistic Approach',
+                            author: 'Immunology Insights',
+                            date: '2025-06-13',
+                            content: `Strengthening your immune system involves more than just diet. This article presents a holistic approach, combining nutritional advice with lifestyle factors like stress reduction, regular exercise, and adequate sleep. It explores the interplay of these elements in building robust defenses against illness and maintaining long-term health.`,
+                            imageUrl: 'https://placehold.co/600x400/FAFAD2/333333?text=Immunity',
+                            tags: ['immunity', 'holistic health', 'prevention']
+                        },
+                        {
+                            id: 'auto-blog-10',
+                            title: 'Understanding Chronic Pain Management',
+                            author: 'Pain Specialist',
+                            date: '2025-06-12',
+                            content: `Chronic pain affects millions globally, significantly impacting quality of life. This guide offers insights into various approaches to chronic pain management, including medication, physical therapy, mindfulness, and alternative therapies. It emphasizes the importance of a multidisciplinary approach tailored to individual needs for effective relief and improved function.`,
+                            imageUrl: 'https://placehold.co/600x400/DDA0DD/333333?text=Chronic+Pain',
+                            tags: ['chronic pain', 'pain management', 'therapy']
+                        },
+                        {
+                            id: 'auto-blog-11',
+                            title: 'Navigating Menopause: A Guide for Women',
+                            author: 'Womens Health Advocate',
+                            date: '2025-06-11',
+                            content: `Menopause is a natural transition in a woman's life, often accompanied by various physical and emotional changes. This comprehensive guide provides information on managing symptoms like hot flashes, mood swings, and sleep disturbances, discussing hormone therapy, lifestyle adjustments, and natural remedies to support well-being during this phase.`,
+                            imageUrl: 'https://placehold.co/600x400/FFC0CB/333333?text=Menopause',
+                            tags: ['womens health', 'menopause', 'hormone health']
+                        },
+                        {
+                            id: 'auto-blog-12',
+                            title: 'The Benefits of Outdoor Exercise',
+                            author: 'Nature Fitness',
+                            date: '2025-06-10',
+                            content: `Taking your workout outdoors offers unique advantages beyond physical fitness. This article highlights how exercising in nature can boost mood, reduce stress, and enhance mental clarity. It explores various outdoor activities and tips for incorporating them safely into your routine for a refreshing health boost.`,
+                            imageUrl: 'https://placehold.co/600x400/90EE90/333333?text=Outdoor+Fitness',
+                            tags: ['exercise', 'nature', 'mental health']
+                        },
+                        {
+                            id: 'auto-blog-13',
+                            title: 'Understanding Gut Health and Probiotics',
+                            author: 'Gastroenterology Pro',
+                            date: '2025-06-09',
+                            content: `The gut microbiome plays a crucial role in overall health, impacting digestion, immunity, and even mood. This blog post demystifies gut health, explaining the importance of beneficial bacteria and the role of probiotics and prebiotics in maintaining a balanced gut flora for optimal well-being.`,
+                            imageUrl: 'https://placehold.co/600x400/F0F8FF/333333?text=Gut+Health',
+                            tags: ['gut health', 'probiotics', 'digestion']
+                        },
+                        {
+                            id: 'auto-blog-14',
+                            title: 'First Aid Essentials for Every Home',
+                            author: 'Emergency Preparedness',
+                            date: '2025-06-08',
+                            content: `Being prepared for minor injuries and emergencies is vital for every household. This guide outlines the essential items to include in a home first aid kit and provides basic instructions for handling common situations like cuts, burns, sprains, and allergic reactions, empowering you to respond effectively.`,
+                            imageUrl: 'https://placehold.co/600x400/F5F5DC/333333?text=First+Aid',
+                            tags: ['first aid', 'emergency', 'safety']
+                        },
+                        {
+                            id: 'auto-blog-15',
+                            title: 'The Impact of Screen Time on Eye Health',
+                            author: 'Optometry Insights',
+                            date: '2025-06-07',
+                            content: `With increasing digital device use, understanding the impact of screen time on eye health is more important than ever. This article discusses common issues like digital eye strain, dry eyes, and the potential long-term effects, offering practical tips and exercises to protect your vision in the digital age.`,
+                            imageUrl: 'https://placehold.co/600x400/87CEEB/333333?text=Eye+Health',
+                            tags: ['eye health', 'screen time', 'digital wellness']
+                        },
+                        {
+                            id: 'auto-blog-16',
+                            title: 'Understanding Anxiety Disorders',
+                            author: 'Mental Health Therapist',
+                            date: '2025-06-06',
+                            content: `Anxiety disorders are among the most common mental health conditions, affecting millions worldwide. This blog post provides a comprehensive overview of different types of anxiety disorders, their symptoms, causes, and various treatment options, including therapy, medication, and self-help strategies, promoting better understanding and support.`,
+                            imageUrl: 'https://placehold.co/600x400/DDA0DD/333333?text=Anxiety',
+                            tags: ['mental health', 'anxiety', 'therapy']
+                        },
+                        {
+                            id: 'auto-blog-17',
+                            title: 'Sustainable Living for a Healthier Planet',
+                            author: 'Eco Wellness',
+                            date: '2025-06-05',
+                            content: `Sustainable living extends beyond environmental benefits to impact personal health positively. This article explores how adopting eco-friendly habits, such as reducing waste, consuming locally, and using natural products, can contribute to a healthier lifestyle and a thriving planet for future generations.`,
+                            imageUrl: 'https://placehold.co/600x400/98FB98/333333?text=Sustainable+Living',
+                            tags: ['environmental health', 'sustainability', 'wellness']
+                        },
+                        {
+                            id: 'auto-blog-18',
+                            title: 'The Importance of Regular Health Check-ups',
+                            author: 'Family Doctor',
+                            date: '2025-06-04',
+                            content: `Regular health check-ups are fundamental to preventive care and early detection of potential health issues. This blog post emphasizes why routine doctor visits, screenings, and vaccinations are crucial at every life stage, helping individuals maintain optimal health and address concerns before they become serious.`,
+                            imageUrl: 'https://placehold.co/600x400/ADD8E6/333333?text=Health+Checkups',
+                            tags: ['preventive care', 'health checkups', 'wellness']
+                        },
+                        {
+                            id: 'auto-blog-19',
+                            title: 'Benefits of Plant-Based Diets',
+                            author: 'Vegan Nutritionist',
+                            date: '2025-06-03',
+                            content: `Plant-based diets are gaining popularity for their wide range of health benefits, from reducing the risk of chronic diseases to promoting weight management. This article delves into the nutritional advantages, diverse food options, and practical tips for transitioning to or maintaining a balanced plant-centric eating pattern.`,
+                            imageUrl: 'https://placehold.co/600x400/F0FFF0/333333?text=Plant-Based',
+                            tags: ['nutrition', 'plant-based', 'diet']
+                        },
+                        {
+                            id: 'auto-blog-20',
+                            title: 'Managing Seasonal Allergies',
+                            author: 'Allergy Specialist',
+                            date: '2025-06-02',
+                            content: `Seasonal allergies can significantly impact daily life with symptoms like sneezing, itchy eyes, and congestion. This guide provides practical strategies for managing and reducing allergy symptoms, including medication options, environmental controls, and lifestyle adjustments to help you enjoy the seasons comfortably.`,
+                            imageUrl: 'https://placehold.co/600x400/FFDAB9/333333?text=Allergies',
+                            tags: ['allergies', 'seasonal health', 'management']
+                        }
+                    ];
+                };
+                
+                // Static reports from the WHO PDF (included directly as they are a small, fixed set)
+                const staticMedicalReports = [
+                    {
+                        id: 'who-ghss-overview',
+                        title: 'WHO Global Health Sector Strategies (GHSS) on HIV, Viral Hepatitis & STIs (2022-2030)',
+                        source: 'World Health Organization',
+                        date: '2025-04-03',
+                        summary: `This report outlines the WHO's global health sector strategies for HIV, viral hepatitis, and sexually transmitted infections for the period 2022-2030. These strategies guide health sector responses to achieve the goals of ending AIDS, viral hepatitis B and C, and STIs by 2030, recommending shared and disease-specific country actions supported by WHO and partners. Progress reports are scheduled for 2024, 2026, 2028, and 2031, with the first considered at the 77th World Health Assembly.`,
+                        documentUrl: 'https://www.who.int/publications/i/item/9789240053779', // Linking to a relevant WHO publication if available
+                        tags: ['WHO', 'global health', 'HIV', 'hepatitis', 'STIs', 'strategy']
+                    },
+                    {
+                        id: 'who-hiv-funding-impact',
+                        title: 'Impact of HIV Funding Crisis on Low- and Middle-Income Countries (2025-2030)',
+                        source: 'Lancet Public Health (Modelling Study)',
+                        date: '2025-03-26',
+                        summary: `A modelling study published on March 26, 2025, investigates the potential impact of PEPFAR discontinuation and anticipated 24% reductions in other international HIV aid on infections and mortality in low- and middle-income countries. Findings suggest that unmitigated funding reductions could lead to an additional 4.43 – 10.75 million new HIV infections and 0.77 – 2.93 million HIV-related deaths between 2025-2030, severely reversing decades of progress. Key populations and sub-Saharan Africa are noted as most impacted.`,
+                        documentUrl: 'https://doi.org/10.1016/S2352-3018(25)00074-8',
+                        tags: ['HIV', 'funding', 'LMICs', 'PEPFAR', 'public health', 'epidemiology']
+                    },
+                    {
+                        id: 'who-sti-trends-2020',
+                        title: 'Rising Global STI Incidence: Off-Track for 2025 Targets',
+                        source: 'World Health Organization Report',
+                        date: '2025-06-21', // Date adjusted to be recent
+                        summary: `New data indicates the world is significantly off track to meet STI targets, with increasing rather than declining trends in new infections. In 2020, there were 374 million new cases of the four curable STIs (syphilis, gonorrhoea, chlamydia, trichomoniasis) in adults aged 15-49 years. A 20% reduction is needed for 2025 targets and 60% for 2030 targets. Case notification rates for STIs like gonorrhoea are particularly increasing in high-income countries.`,
+                        documentUrl: '#', // Placeholder or find a public WHO STI report link
+                        tags: ['STIs', 'syphilis', 'gonorrhea', 'chlamydia', 'trichomoniasis', 'global health']
+                    },
+                    {
+                        id: 'who-hepatitis-b-coverage',
+                        title: 'Viral Hepatitis Indicators Off Track: Hepatitis B Birth Dose Coverage Shortfalls',
+                        source: 'World Health Organization Report',
+                        date: '2025-06-21', // Date adjusted to be recent
+                        summary: `Despite efforts, global indicators for viral hepatitis remain off track. Only 13% of people with chronic hepatitis B and 36% with hepatitis C were diagnosed by end of 2022, with even fewer receiving treatment. Global hepatitis B birth dose vaccine coverage reached only 45% in 2022, falling significantly short of the 2025 target of 70%. Viral hepatitis mortality continues to rise, notably from liver cancer/cirrhosis.`,
+                        documentUrl: '#', // Placeholder or link to WHO Hepatitis report
+                        tags: ['hepatitis', 'hepatitis B', 'hepatitis C', 'vaccination', 'global health']
+                    },
+                    {
+                        id: 'who-hiv-lenacapvir-prep',
+                        title: 'New WHO Guidance on Lenacapvir as HIV PrEP (Expected July 2025)',
+                        source: 'World Health Organization (Guideline Development Group)',
+                        date: '2025-06-21', // Date adjusted to be recent
+                        summary: `The WHO Guideline Development Group has suggested new guidance on lenacapvir as a long-acting injectable pre-exposure prophylaxis (PrEP) option for HIV prevention, expected to be released in July 2025. This innovation is part of a combination prevention approach and is being prepared for roll-out in early adopter countries by late 2025 and 2026, aiming to accelerate HIV incidence reductions.`,
+                        documentUrl: '#', // Placeholder or link to relevant WHO publication
+                        tags: ['HIV', 'PrEP', 'prevention', 'lenacapvir', 'WHO', 'innovation']
+                    },
+                    {
+                        id: 'who-hiv-lai-treatment',
+                        title: 'WHO Guidance on Long-Acting Injectable ART for HIV Treatment (Expected July 2025)',
+                        source: 'World Health Organization (Guideline Development Group)',
+                        date: '2025-06-21', // Date adjusted to be recent
+                        summary: `The WHO Guideline Development Group has also suggested new guidance on long-acting injectable antiretroviral therapy (ART) for HIV treatment, expected in July 2025. This guidance will focus on using CAB/RPV as an alternative switching option for adults and adolescents already on oral ART. WHO is also updating its target product profile for long-acting injectables (LAIs) to reflect new clinical developments and community input.`,
+                        documentUrl: '#', // Placeholder or link to relevant WHO publication
+                        tags: ['HIV', 'treatment', 'ART', 'LAI', 'WHO', 'innovation']
+                    }
+                ];
+
+                const fetchDynamicMedicalReports = async (numToGenerate, offset = 0, maxRetries = 3) => {
+                    const topics = [
+                        "malaria", "syphilis", "hiv", "arthritis", "waste disposal and management",
+                        "infection control and management", "adverse drug effect", "gonorrhoea",
+                        "use of mosquito nets among pregnant women", "diabetes mellitus"
+                    ];
+
+                    let attempts = 0;
+                    while (attempts < maxRetries) {
+                        try {
+                            const prompt = `Generate a JSON array of ${numToGenerate} unique medical research reports. These reports should be distinct from each other and specifically focus on various sub-topics within these general areas: ${topics.join(', ')}. Each object in the array must have the following properties: "id" (unique string, e.g., "report-topic-year-shortId"), "title" (string, max 15 words), "source" (string, e.g., "Nature", "NEJM", "WHO Journal", "CDC Report"), "date" (string,MMA-DD format, from 2020-01-01 to 2025-12-31), "summary" (a detailed paragraph, min 100 words, clearly summarizing a research finding or key information), and "tags" (array of 1-3 strings, relevant keywords). Ensure diversity in content and sources.`;
+
+                            let chatHistory = [];
+                            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                            const payload = {
+                                contents: chatHistory,
+                                generationConfig: {
+                                    responseMimeType: "application/json",
+                                    responseSchema: {
+                                        type: "ARRAY",
+                                        items: {
+                                            type: "OBJECT",
+                                            properties: {
+                                                "id": { "type": "STRING" },
+                                                "title": { "type": "STRING" },
+                                                "source": { "type": "STRING" },
+                                                "date": { "type": "STRING" },
+                                                "summary": { "type": "STRING" },
+                                                "documentUrl": { "type": "STRING" },
+                                                "tags": {
+                                                    "type": "ARRAY",
+                                                    "items": { "type": "STRING" }
+                                                }
+                                            },
+                                            "propertyOrdering": ["id", "title", "source", "date", "summary", "documentUrl", "tags"]
+                                        }
+                                    }
+                                }
+                            };
+                            const apiKey = "AIzaSyBosQQfG2P_kffhRLWhN6iJr7-zPSDgn80"; // IMPORTANT: Replace with your actual API key here.
+                            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                            const response = await fetch(apiUrl, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+
+                            if (!response.ok) {
+                                const errorData = await response.json();
+                                throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error.message || 'Unknown error'}`);
+                            }
+
+                            const result = await response.json();
+
+                            if (result.candidates && result.candidates.length > 0 &&
+                                result.candidates[0].content && result.candidates[0].content.parts &&
+                                result.candidates[0].content.parts.length > 0) {
+                                const jsonText = result.candidates[0].content.parts[0].text;
+                                const parsedJson = JSON.parse(jsonText);
+
+                                if (Array.isArray(parsedJson)) {
+                                    // Add unique IDs and ensure documentUrl is always '#' for newly generated ones
+                                    const generatedReports = parsedJson.map((report, index) => ({
+                                        ...report,
+                                        id: `generated-report-${Date.now()}-${offset + index}`,
+                                        documentUrl: '#', // Ensure placeholder for generated reports
+                                        tags: Array.isArray(report.tags) ? report.tags : (typeof report.tags === 'string' ? report.tags.split(',').map(t => t.trim()) : [])
+                                    }));
+                                    return generatedReports;
+                                } else {
+                                    throw new Error("Generated content is not a valid array.");
+                                }
+                            } else {
+                                throw new Error("No content generated by the API.");
+                            }
+                        } catch (error) {
+                            console.error(`Attempt ${attempts + 1} failed for batch starting at offset ${offset}:`, error);
+                            attempts++;
+                            if (attempts < maxRetries) {
+                                await new Promise(res => setTimeout(res, 3000 * attempts)); // Exponential backoff for retries
+                            } else {
+                                throw error; // Re-throw if max retries reached
+                            }
+                        }
+                    }
+                };
+
+                const loadInitialReports = async () => {
+                    setIsLoadingReports(true);
+                    setReportError(null);
+                    try {
+                        // Start with static reports
+                        let initialReports = [...staticMedicalReports];
+                        setReportsLoadedCount(initialReports.length);
+
+                        // Then fetch the first batch of dynamic reports
+                        const firstBatch = await fetchDynamicMedicalReports(batchSize, initialReports.length);
+                        initialReports = initialReports.concat(firstBatch);
+                        setMedicalReports(initialReports);
+                        setTotalReportsGenerated(initialReports.length);
+                        setReportsLoadedCount(initialReports.length);
+                    } catch (error) {
+                        setReportError("Failed to load initial reports. Please try refreshing or check your network/API key. Details: " + error.message);
+                    } finally {
+                        setIsLoadingReports(false);
+                    }
+                }
+                
+                // Function to load more reports when button is clicked
+                const handleLoadMoreReports = async () => {
+                    setIsLoadingReports(true);
+                    setReportError(null);
+                    try {
+                        const newBatch = await fetchDynamicMedicalReports(batchSize, totalReportsGenerated);
+                        setMedicalReports(prevReports => [...prevReports, ...newBatch]);
+                        setTotalReportsGenerated(prevCount => prevCount + newBatch.length);
+                        setReportsLoadedCount(prevCount => prevCount + newBatch.length);
+                    } catch (error) {
+                        setReportError("Failed to load more reports. Please try again. Details: " + error.message);
+                    } finally {
+                        setIsLoadingReports(false);
+                    }
+                };
+
+
+                // Fetch static blogs
+                fetchAutomaticBlogs().then(data => setBlogs(data));
+
+                // Load initial set of dynamic medical reports
+                loadInitialReports();
+
+                // Expose handleLoadMoreReports to the window for button click
+                // (Alternatively, could just call it directly from the button JSX if it's within the App component)
+                window.handleLoadMoreReports = handleLoadMoreReports;
+
+            }, []); // Empty dependency array means this runs once on mount
+
+            // Function to handle manual content submission
+            const handleAddContent = (newContent) => {
+                if (addContentType === 'blog') {
+                    setBlogs(prev => [...prev, { ...newContent, id: `manual-blog-${Date.now()}` }]);
+                } else if (addContentType === 'medicalReport') {
+                    setMedicalReports(prev => [...prev, { ...newContent, id: `manual-report-${Date.now()}` }]);
+                }
+                setShowAddContentModal(false); // Close modal after submission
+            };
+
+            // Function to open the detailed content modal
+            const handleReadMoreClick = (contentItem) => {
+                setSelectedContent(contentItem);
+            };
+
+            // Filter content based on search term
+            const filteredBlogs = blogs.filter(blog =>
+                blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                blog.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                blog.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                blog.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
+
+            const filteredMedicalReports = medicalReports.filter(report =>
+                report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                report.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                report.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                report.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
+
+            return (
+                <div className="min-h-screen bg-gray-50 text-gray-800">
+                    {/* Header */}
+                    <header className="bg-gradient-to-r from-teal-500 to-cyan-600 shadow-md py-4 rounded-b-xl">
+                        <div className="container mx-auto px-4 flex justify-between items-center">
+                            <h1 className="text-3xl font-bold text-white tracking-wide">Wellpedia</h1>
+                            <nav className="space-x-6">
+                                <a href="#blogs" className="text-white hover:text-teal-100 transition duration-300 flex items-center gap-1">
+                                    <BookOpenIcon size={18} /> Blogs
+                                </a>
+                                <a href="#medical-reports" className="text-white hover:text-teal-100 transition duration-300 flex items-center gap-1">
+                                    <StethoscopeIcon size={18} /> Reports
+                                </a>
+                                <a href="#about" className="text-white hover:text-teal-100 transition duration-300 flex items-center gap-1">
+                                    <InfoIcon size={18} /> About
+                                </a>
+                                <a href="#contact" className="text-white hover:text-teal-100 transition duration-300 flex items-center gap-1">
+                                    <MailIcon size={18} /> Contact
+                                </a>
+                            </nav>
+                        </div>
+                    </header>
+
+                    {/* Hero Section */}
+                    <section className="bg-gradient-to-br from-teal-50 to-cyan-100 py-20 px-4 text-center rounded-b-2xl shadow-inner">
+                        <div className="container mx-auto">
+                            <h2 className="text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+                                Your Trusted Source for Health Information
+                            </h2>
+                            <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8 animate-fade-in">
+                                {healthTips[currentTipIndex]}
+                            </p>
+                            <div className="flex justify-center gap-4">
+                                <button
+                                    onClick={() => { setAddContentType('blog'); setShowAddContentModal(true); }}
+                                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transform transition duration-300 hover:scale-105 flex items-center gap-2"
+                                >
+                                    <PlusCircleIcon size={20} /> Add New Blog
+                                </button>
+                                <button
+                                    onClick={() => { setAddContentType('medicalReport'); setShowAddContentModal(true); }}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transform transition duration-300 hover:scale-105 flex items-center gap-2"
+                                >
+                                    <PlusCircleIcon size={20} /> Add New Report
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Main Content Area */}
+                    <main className="container mx-auto px-4 py-12">
+                        {/* Search Bar */}
+                        <div className="mb-12 flex justify-center">
+                            <div className="relative w-full max-w-xl">
+                                <input
+                                    type="text"
+                                    placeholder="Search blogs or reports..."
+                                    className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition duration-200"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                                <SearchIcon className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                            </div>
+                        </div>
+
+                        {/* Blogs Section */}
+                        <section id="blogs" className="mb-16">
+                            <h3 className="text-4xl font-bold text-gray-900 mb-8 text-center border-b-2 border-teal-400 pb-4">
+                                Latest Blogs
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {filteredBlogs.length > 0 ? (
+                                    filteredBlogs.map(blog => (
+                                        <BlogCard key={blog.id} blog={blog} onReadMoreClick={handleReadMoreClick} />
+                                    ))
+                                ) : (
+                                    <p className="col-span-full text-center text-gray-600">No blogs found matching your search.</p>
+                                )}
+                            </div>
+                        </section>
+
+                        {/* AdSense Placeholder 1 */}
+                        <div className="my-16 p-8 bg-white border border-gray-200 rounded-xl shadow-md text-center text-gray-600 italic">
+                            {/* Google AdSense Ad Unit - Placeholder */}
+                            <p className="text-xl font-semibold mb-2">Advertisement</p>
+                            <p>Place your Google AdSense code here.</p>
+                            <div className="w-full h-32 bg-gray-100 flex items-center justify-center rounded-lg border border-dashed border-gray-300 mt-4">
+                                <span className="text-gray-400">Ad Space (e.g., 728x90)</span>
+                            </div>
+                        </div>
+
+                        {/* Medical Reports Section */}
+                        <section id="medical-reports" className="mb-16">
+                            <h3 className="text-4xl font-bold text-gray-900 mb-8 text-center border-b-2 border-cyan-400 pb-4">
+                                Medical Reports
+                            </h3>
+                            {reportError ? (
+                                <div className="text-center py-8 text-red-600">
+                                    <p className="font-semibold">Error Loading Reports:</p>
+                                    <p>{reportError}</p>
+                                    <p className="text-sm text-gray-500 mt-2">Please ensure your internet connection is stable, your API key is correct, and try refreshing the page or clicking "Load More Reports".</p>
+                                </div>
+                            ) : filteredMedicalReports.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {filteredMedicalReports.map(report => (
+                                        <MedicalReportCard key={report.id} report={report} onReadMoreClick={handleReadMoreClick} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="col-span-full text-center text-gray-600">No medical reports found matching your search or loading.</p>
+                            )}
+
+                            <div className="text-center mt-8">
+                                <button
+                                    onClick={window.handleLoadMoreReports} // Call the function exposed to window
+                                    disabled={isLoadingReports}
+                                    className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transform transition duration-300 hover:scale-105 flex items-center justify-center mx-auto gap-2"
+                                >
+                                    {isLoadingReports ? (
+                                        <>
+                                            <div className="inline-block animate-spin rounded-full h-5 w-5 border-2 border-t-2 border-purple-200 border-t-white"></div>
+                                            Loading More... ({reportsLoadedCount} reports loaded)
+                                        </>
+                                    ) : (
+                                        `Load More Reports (${reportsLoadedCount} loaded)`
+                                    )}
+                                </button>
+                                <p className="text-sm text-gray-500 mt-2">Click to load more batches of reports (target: 2000+ total).</p>
+                            </div>
+                        </section>
+
+                        {/* AdSense Placeholder 2 */}
+                        <div className="my-16 p-8 bg-white border border-gray-200 rounded-xl shadow-md text-center text-gray-600 italic">
+                            {/* Google AdSense Ad Unit - Placeholder */}
+                            <p className="text-xl font-semibold mb-2">Advertisement</p>
+                            <p>Place your Google AdSense code here.</p>
+                            <div className="w-full h-32 bg-gray-100 flex items-center justify-center rounded-lg border border-dashed border-gray-300 mt-4">
+                                <span className="text-gray-400">Ad Space (e.g., 300x250)</span>
+                            </div>
+                        </div>
+
+                        {/* About Section */}
+                        <section id="about" className="mb-16 p-8 bg-white rounded-xl shadow-lg">
+                            <h3 className="text-4xl font-bold text-gray-900 mb-6 text-center">About Us</h3>
+                            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+                                Welcome to Wellpedia! Our mission is to provide accurate, evidence-based, and engaging health information to empower individuals to make informed decisions about their well-being. We believe that everyone deserves access to reliable health resources.
+                            </p>
+                            <p className="text-lg text-gray-700 leading-relaxed">
+                                We strive to collaborate with health professionals and focus on niche areas to deliver deep insights and practical advice. Our content ranges from healthy eating habits and stress management techniques to the latest medical research.
+                            </p>
+                        </section>
+
+                        {/* Contact Section */}
+                        <section id="contact" className="p-8 bg-white rounded-xl shadow-lg">
+                            <h3 className="text-4xl font-bold text-gray-900 mb-6 text-center">Contact Us</h3>
+                            <p className="text-lg text-gray-700 leading-relaxed mb-4 text-center">
+                                Have questions or suggestions? We'd love to hear from you! You can reach us directly at <a href="mailto:kaigwaakram123@gmail.com" className="text-teal-600 hover:underline">kaigwaakram123@gmail.com</a>, or use the form below.
+                            </p>
+                            <form className="max-w-xl mx-auto space-y-6">
+                                <div>
+                                    <label htmlFor="name" className="block text-gray-700 text-sm font-semibold mb-2">Name</label>
+                                    <input type="text" id="name" name="name" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Your Name" />
+                                </div>
+                                <div>
+                                    <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                                    <input type="email" id="email" name="email" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Your Email" />
+                                </div>
+                                <div>
+                                    <label htmlFor="message" className="block text-gray-700 text-sm font-semibold mb-2">Message</label>
+                                    <textarea id="message" name="message" rows="5" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Your Message"></textarea>
+                                </div>
+                                <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-lg shadow-md transform transition duration-300 hover:scale-105">
+                                    Send Message
+                                </button>
+                            </form>
+                        </section>
+                    </main>
+
+                    {/* Disclaimer Section (Existing) */}
+                    <section className="bg-amber-50 border-t border-amber-200 py-8 px-4 text-center text-amber-800 rounded-t-xl">
+                        <div className="container mx-auto">
+                            <h4 className="text-2xl font-bold mb-4">Important Disclaimer</h4>
+                            <p className="text-base leading-relaxed">
+                                The information provided on this website is for educational purposes only and is not intended as a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this website. We are not medical professionals.
+                            </p>
+                        </div>
+                    </section>
+
+                    {/* Footer */}
+                    <footer className="bg-gray-800 text-white py-8 px-4 rounded-t-xl">
+                        <div className="container mx-auto text-center flex flex-col sm:flex-row justify-between items-center px-4">
+                            <p className="mb-2 sm:mb-0">&copy; {new Date().getFullYear()} Wellpedia. All rights reserved.</p>
+                            <div className="flex space-x-4">
+                                <button onClick={() => setShowPrivacyPolicyModal(true)} className="hover:underline flex items-center gap-1 text-white">
+                                    <ShieldIcon size={16} /> Privacy Policy
+                                </button>
+                                <button onClick={() => setShowTermsOfServiceModal(true)} className="hover:underline flex items-center gap-1 text-white">
+                                    <FileTextIcon size={16} /> Terms of Service
+                                </button>
+                            </div>
+                        </div>
+                    </footer>
+
+                    {/* Add Content Modal */}
+                    {showAddContentModal && (
+                        <AddContentModal
+                            onClose={() => setShowAddContentModal(false)}
+                            onAddContent={handleAddContent}
+                            contentType={addContentType}
+                        />
+                    )}
+
+                    {/* Detailed Content Modal (for blogs/reports) */}
+                    {selectedContent && (
+                        <DetailedContentModal
+                            content={selectedContent}
+                            onClose={() => setSelectedContent(null)}
+                        />
+                    )}
+
+                    {/* NEW: Privacy Policy Modal */}
+                    {showPrivacyPolicyModal && (
+                        <InfoModal title="Privacy Policy" onClose={() => setShowPrivacyPolicyModal(false)}>
+                            <p><strong>Effective Date:</strong> June 22, 2025</p>
+                            <p>Your privacy is important to us. This Privacy Policy explains how Wellpedia ("we," "us," or "our") collects, uses, and discloses information about you when you visit our website, Wellpedia.com (the "Site").</p>
+
+                            <h4>Information We Collect</h4>
+                            <p>We do not directly collect personally identifiable information from our users unless you voluntarily provide it through our contact form. This may include your name and email address.</p>
+                            <p><strong>Automatically Collected Information:</strong> When you access our Site, we may automatically collect certain non-personally identifiable information, such as your IP address, browser type, operating system, referring URLs, access times, and pages viewed. This data is collected to improve our Site's functionality and user experience.</p>
+                            <p><strong>Cookies and Tracking Technologies:</strong> We and our third-party service providers (including Google AdSense) may use cookies and similar tracking technologies to collect and use personal information about you. This is primarily for displaying relevant advertisements and analyzing site traffic. You can control cookies through your browser settings.</p>
+
+                            <h4>How We Use Your Information</h4>
+                            <p>We use the information we collect for the following purposes:</p>
+                            <ul className="list-disc list-inside ml-4">
+                                <li>To provide, operate, and maintain our Site.</li>
+                                <li>To respond to your inquiries and provide user support.</li>
+                                <li>To understand and analyze how you use our Site, helping us improve its content and features.</li>
+                                <li>For advertising and marketing purposes, including displaying personalized ads via Google AdSense.</li>
+                                <li>To detect, prevent, and address technical issues.</li>
+                            </ul>
+
+                            <h4>Disclosure of Your Information</h4>
+                            <p>We may share your information with third-party service providers who perform services on our behalf, such as web hosting, analytics, and advertising services (e.g., Google AdSense). These service providers are obligated to protect your information.</p>
+                            <p>We may also disclose your information if required to do so by law or in response to valid requests by public authorities (e.g., a court order or government agency).</p>
+
+                            <h4>Third-Party Links and Ads (Google AdSense)</h4>
+                            <p>Our Site uses Google AdSense to serve advertisements. Google, as a third-party vendor, uses cookies to serve ads on our Site. Google's use of the DART cookie enables it to serve ads to our users based on their visit to our Site and other sites on the Internet. Users may opt out of the use of the DART cookie by visiting the Google Ad and Content Network Privacy Policy.</p>
+                            <p>We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services linked from our Site.</p>
+
+                            <h4>Security of Your Information</h4>
+                            <p>We implement reasonable security measures to protect the information we collect from unauthorized access, disclosure, alteration, and destruction.</p>
+
+                            <h4>Changes to This Privacy Policy</h4>
+                            <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Effective Date" at the top.</p>
+
+                            <h4>Contact Us</h4>
+                            <p>If you have any questions about this Privacy Policy, please contact us via the contact form on our Site or at <a href="mailto:kaigwaakram123@gmail.com" className="text-teal-600 hover:underline">kaigwaakram123@gmail.com</a>.</p>
+                        </InfoModal>
+                    )}
+
+                    {/* NEW: Terms of Service Modal */}
+                    {showTermsOfServiceModal && (
+                        <InfoModal title="Terms of Service" onClose={() => setShowTermsOfServiceModal(false)}>
+                            <p><strong>Effective Date:</strong> June 22, 2025</p>
+                            <p>Welcome to Wellpedia! These Terms of Service ("Terms") govern your use of our website, Wellpedia.com (the "Site"). By accessing or using the Site, you agree to be bound by these Terms.</p>
+
+                            <h4>Use of Content</h4>
+                            <p>All content on Wellpedia, including text, graphics, images, and information, is for informational purposes only. It is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this Site.</p>
+
+                            <h4>User Conduct</h4>
+                            <p>You agree to use the Site only for lawful purposes and in a way that does not infringe the rights of, restrict, or inhibit anyone else's use and enjoyment of the Site.</p>
+
+                            <h4>Intellectual Property</h4>
+                            <p>The content, features, and functionality of the Site are owned by Wellpedia and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.</p>
+
+                            <h4>Third-Party Links</h4>
+                            <p>Our Site may contain links to third-party websites or services that are not owned or controlled by Wellpedia. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party websites or services.</p>
+
+                            <h4>Disclaimer of Warranties</h4>
+                            <p>The Site is provided on an "AS IS" and "AS AVAILABLE" basis. We make no representations or warranties of any kind, express or implied, as to the operation of the Site or the information, content, materials, or products included on the Site.</p>
+
+                            <h4>Limitation of Liability</h4>
+                            <p>In no event shall Wellpedia, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Site; (ii) any conduct or content of any third party on the Site; (iii) any content obtained from the Site; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage, and even if a remedy set forth herein is found to have failed of its essential purpose.</p>
+
+                            <h4>Changes to Terms</h4>
+                            <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Site after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Site.</p>
+
+                            <h4>Governing Law</h4>
+                            <p>These Terms shall be governed and construed in accordance with the laws of Uganda, without regard to its conflict of law provisions.</p>
+
+                            <h4>Contact Us</h4>
+                            <p>If you have any questions about these Terms, please contact us via the contact form on our Site or at <a href="mailto:kaigwaakram123@gmail.com" className="text-teal-600 hover:underline">kaigwaakram123@gmail.com</a>.</p>
+                        </InfoModal>
+                    )}
+                </div>
+            );
+        };
+
+        // Component for a single Blog Card
+        const BlogCard = ({ blog, onReadMoreClick }) => {
+            const { useState } = React;
+            return (
+                <div 
+                    className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 transform transition duration-300 hover:scale-103 hover:shadow-xl cursor-pointer"
+                    onClick={() => onReadMoreClick(blog)} // Make the whole card clickable
+                >
+                    <img src={blog.imageUrl} alt={blog.title} className="w-full h-48 object-cover" onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/94A3B8/FFFFFF?text=No+Image"; }} />
+                    <div className="p-6">
+                        <h4 className="text-xl font-semibold text-gray-900 mb-2">{blog.title}</h4>
+                        <p className="text-sm text-gray-600 mb-3">By {blog.author} | {blog.date}</p>
+                        <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">{blog.content}</p>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                            {blog.tags && blog.tags.map(tag => (
+                                <span key={tag} className="bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                        {/* The "Read More" link now also triggers the modal */}
+                        <a href="#" onClick={(e) => { e.preventDefault(); onReadMoreClick(blog); }} className="text-teal-600 hover:underline font-medium text-sm">Read More</a>
+                    </div>
+                </div>
+            );
+        };
+
+        // Component for a single Medical Report Card
+        const MedicalReportCard = ({ report, onReadMoreClick }) => {
+            const { useState } = React;
+            return (
+                <div
+                    className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 transform transition duration-300 hover:scale-103 hover:shadow-xl cursor-pointer"
+                    onClick={() => {
+                        // If there's a real document URL, open it in a new tab. Otherwise, open the modal.
+                        if (report.documentUrl && report.documentUrl !== '#') {
+                            window.open(report.documentUrl, '_blank');
+                        } else {
+                            onReadMoreClick(report);
+                        }
+                    }}
+                >
+                    <div className="p-6">
+                        <h4 className="text-xl font-semibold text-gray-900 mb-2">{report.title}</h4>
+                        <p className="text-sm text-gray-600 mb-3">Source: {report.source} | {report.date}</p>
+                        <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">{report.summary}</p>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                            {report.tags && report.tags.map(tag => (
+                                <span key={tag} className="bg-cyan-100 text-cyan-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                        {/* The "View Report" link now handles both external links and modal display */}
+                        <a
+                            href={report.documentUrl && report.documentUrl !== '#' ? report.documentUrl : '#'}
+                            target={report.documentUrl && report.documentUrl !== '#' ? "_blank" : "_self"}
+                            rel="noopener noreferrer"
+                            onClick={(e) => {
+                                if (report.documentUrl && report.documentUrl !== '#') {
+                                    // Let default link behavior happen if it's a real URL
+                                } else {
+                                    e.preventDefault(); // Prevent default if it's a placeholder '#'
+                                    onReadMoreClick(report);
+                                }
+                            }}
+                            className="text-blue-600 hover:underline font-medium text-sm"
+                        >
+                            View Report
+                        </a>
+                    </div>
+                </div>
+            );
+        };
+
+        // Modal for adding new content manually
+        const AddContentModal = ({ onClose, onAddContent, contentType }) => {
+            const { useState } = React;
+            const [title, setTitle] = useState('');
+            const [authorOrSource, setAuthorOrSource] = useState('');
+            const [contentOrSummary, setContentOrSummary] = useState('');
+            const [imageUrl, setImageUrl] = useState('');
+            const [tags, setTags] = useState(''); // Comma-separated tags
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const newContent = {
+                    title,
+                    date: new Date().toISOString().slice(0, 10), // Current date
+                    tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '')
+                };
+
+                if (contentType === 'blog') {
+                    newContent.author = authorOrSource;
+                    newContent.content = contentOrSummary;
+                    newContent.imageUrl = imageUrl || 'https://placehold.co/600x400/94A3B8/FFFFFF?text=No+Image';
+                } else if (contentType === 'medicalReport') {
+                    newContent.source = authorOrSource;
+                    newContent.summary = contentOrSummary;
+                    newContent.documentUrl = '#'; // Placeholder, could be an actual URL in a real app
+                }
+                onAddContent(newContent);
+            };
+
+            return (
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg relative transform transition-all duration-300 scale-100 opacity-100">
+                        <button
+                            onClick={onClose}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition duration-200"
+                        >
+                            <XCircleIcon size={24} />
+                        </button>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                            Add New {contentType === 'blog' ? 'Blog Post' : 'Medical Report'}
+                        </h3>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label htmlFor="title" className="block text-gray-700 text-sm font-semibold mb-2">Title</label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="authorOrSource" className="block text-gray-700 text-sm font-semibold mb-2">
+                                    {contentType === 'blog' ? 'Author' : 'Source'}
+                                </label>
+                                <input
+                                    type="text"
+                                    id="authorOrSource"
+                                    value={authorOrSource}
+                                    onChange={(e) => setAuthorOrSource(e.target.value)}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="contentOrSummary" className="block text-gray-700 text-sm font-semibold mb-2">
+                                    {contentType === 'blog' ? 'Content' : 'Summary'}
+                                </label>
+                                <textarea
+                                    id="contentOrSummary"
+                                    value={contentOrSummary}
+                                    onChange={(e) => setContentOrSummary(e.target.value)}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                    rows="6"
+                                    required
+                                ></textarea>
+                            </div>
+                            {contentType === 'blog' && (
+                                <div>
+                                    <label htmlFor="imageUrl" className="block text-gray-700 text-sm font-semibold mb-2">Image URL (Optional)</label>
+                                    <input
+                                        type="url"
+                                        id="imageUrl"
+                                        value={imageUrl}
+                                        onChange={(e) => setImageUrl(e.target.value)}
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                    />
+                                </div>
+                            )}
+                            <div>
+                                <label htmlFor="tags" className="block text-gray-700 text-sm font-semibold mb-2">Tags (comma-separated)</label>
+                                <input
+                                    type="text"
+                                    id="tags"
+                                    value={tags}
+                                    onChange={(e) => setTags(e.target.value)}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                    placeholder="e.g., nutrition, exercise, research"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-lg shadow-md transform transition duration-300 hover:scale-105"
+                            >
+                                Add {contentType === 'blog' ? 'Blog' : 'Report'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        // Re-usable Info Modal Component for Privacy Policy and Terms of Service
+        const InfoModal = ({ title, children, onClose }) => {
+            return (
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-3xl h-5/6 overflow-y-auto relative transform transition-all duration-300 scale-100 opacity-100">
+                        <button
+                            onClick={onClose}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition duration-200"
+                        >
+                            <XCircleIcon size={24} />
+                        </button>
+                        <h3 className="text-3xl font-bold text-gray-900 mb-4 text-center">{title}</h3>
+                        <div className="text-gray-700 leading-relaxed text-base space-y-4">
+                            {children}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+
+        // Detailed Content Modal (for blogs/reports)
+        const DetailedContentModal = ({ content, onClose }) => {
+            const { useState } = React;
+            if (!content) return null; // Don't render if no content is selected
+
+            const isBlog = content.hasOwnProperty('author'); // Simple check to determine if it's a blog or report
+
+            return (
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-3xl h-5/6 overflow-y-auto relative transform transition-all duration-300 scale-100 opacity-100">
+                        <button
+                            onClick={onClose}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition duration-200"
+                        >
+                            <XCircleIcon size={24} />
+                        </button>
+                        <h3 className="text-3xl font-bold text-gray-900 mb-4">{content.title}</h3>
+                        <p className="text-sm text-gray-600 mb-4">
+                            {isBlog ? `By ${content.author}` : `Source: ${content.source}`} | {content.date}
+                        </p>
+                        {isBlog && content.imageUrl && (
+                            <img src={content.imageUrl} alt={content.title} className="w-full h-64 object-cover rounded-lg mb-6" onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/800x400/94A3B8/FFFFFF?text=No+Image"; }} />
+                        )}
+                        <p className="text-gray-700 leading-relaxed text-base mb-6">
+                            {isBlog ? content.content : content.summary}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                            {content.tags && content.tags.map(tag => (
+                                <span key={tag} className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${isBlog ? 'bg-teal-100 text-teal-800' : 'bg-cyan-100 text-cyan-800'}`}>
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                        {content.documentUrl && content.documentUrl !== '#' && (
+                            <a href={content.documentUrl} target="_blank" rel="noopener noreferrer" className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300 mt-4">
+                                Go to Original Source
+                            </a>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+
+        // Render the App component into the root div
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
