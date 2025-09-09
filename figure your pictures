@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figure Your Pictures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f8;
+            background-image: linear-gradient(135deg, #a7cbf5 0%, #d4a5ef 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            padding: 3rem;
+            margin: 2rem;
+            animation: fadeIn 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ad-container {
+            min-height: 100px;
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 1rem;
+            margin: 2rem 0;
+            color: #64748b;
+            text-align: center;
+            border: 2px dashed #e2e8f0;
+        }
+        .btn-gradient {
+            background-image: linear-gradient(to right, #6366f1, #8b5cf6, #d946ef);
+            transition: all 0.3s ease-in-out;
+            border: none;
+        }
+        .btn-gradient:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+        }
+        .btn-gradient:active {
+            transform: scale(0.98);
+        }
+        .download-btn {
+            background-image: linear-gradient(to right, #22c55e, #16a34a);
+        }
+        .download-btn:hover {
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.4);
+        }
+        .upload-box-hover:hover {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        #three-canvas {
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: #282c34;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="flex flex-col items-center">
+            <div class="flex items-center mb-6">
+                <svg class="w-16 h-16 text-indigo-600 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <h1 class="text-6xl font-extrabold text-gray-900 text-center">Figure Your Pictures</h1>
+            </div>
+            <p class="text-gray-600 text-center mb-12 text-lg font-medium">Turn your photos into personalized figurines with the power of AI.</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div class="bg-indigo-50 border-2 border-dashed border-indigo-200 rounded-3xl p-10 flex flex-col items-center justify-center cursor-pointer transition-colors duration-200 upload-box-hover" id="upload-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    <span class="mt-4 text-indigo-700 font-semibold text-xl">Click to upload your picture</span>
+                    <input type="file" id="image-upload" accept="image/*" class="hidden">
+                </div>
+                
+                <textarea id="prompt-input" rows="5" class="w-full p-6 border-2 border-gray-300 rounded-3xl focus:ring-4 focus:ring-purple-300 focus:border-purple-500 transition-all duration-200 resize-none placeholder-gray-400" placeholder="Describe the figurine features here..."></textarea>
+
+                <div class="flex items-center space-x-4">
+                    <label for="figurine-material" class="text-gray-700 font-semibold">Material:</label>
+                    <select id="figurine-material" class="flex-1 p-3 border-2 border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-300 focus:border-purple-500 transition-all duration-200">
+                        <option value="vinyl">Vinyl</option>
+                        <option value="porcelain">Porcelain</option>
+                        <option value="metal">Metal</option>
+                    </select>
+                </div>
+                
+                <button id="generate-btn" class="w-full text-white font-bold py-5 px-8 rounded-3xl shadow-lg btn-gradient">
+                    Generate Figurine
+                </button>
+            </div>
+
+            <div class="flex flex-col items-center justify-center">
+                <!-- AdSense Placeholder 1 -->
+                <div class="ad-container w-full max-w-lg mb-8">
+                    <p>Figurine Showcase Ad</p>
+                </div>
+                
+                <div id="loading" class="hidden text-purple-600 font-semibold text-lg flex items-center">
+                    <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Generating your figurine...</span>
+                </div>
+                
+                <div id="result-container" class="hidden w-full h-96 flex flex-col items-center">
+                    <canvas id="three-canvas" class="w-full h-full"></canvas>
+                    <button id="download-btn" class="w-full mt-4 text-white font-bold py-5 px-8 rounded-3xl shadow-lg btn-gradient download-btn">
+                        Download Image
+                    </button>
+                </div>
+            </div>
+        </main>
+        
+        <section id="gallery-section" class="mt-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Community Gallery</h2>
+            <div id="figurine-gallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <p class="text-center text-gray-500 col-span-full">Loading gallery...</p>
+            </div>
+        </section>
+
+        <!-- AdSense Placeholder 2 -->
+        <div class="ad-container w-full max-w-lg mt-12 self-center">
+            <p>AI Art Inspiration Ad</p>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Three.js and OrbitControls
+        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+        import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/controls/OrbitControls.js';
+
+        // Set global variables from the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        let userId = null;
+
+        // API configuration
+        const apiKey = ""; 
+        const modelName = "gemini-2.5-flash-image-preview";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+        // UI Elements
+        const uploadInput = document.getElementById('image-upload');
+        const uploadBox = document.getElementById('upload-box');
+        const promptInput = document.getElementById('prompt-input');
+        const generateBtn = document.getElementById('generate-btn');
+        const loadingDiv = document.getElementById('loading');
+        const resultContainer = document.getElementById('result-container');
+        const threeCanvas = document.getElementById('three-canvas');
+        const downloadBtn = document.getElementById('download-btn');
+        const figurineGallery = document.getElementById('figurine-gallery');
+        let uploadedImageData = null;
+
+        // Three.js variables
+        let scene, camera, renderer, controls;
+        let figurineMesh;
+
+        // Default prompt
+        promptInput.value = "Create a 1/7 scale commercialized figurine of the characters in the picture, in a realistic style, in a real environment. The figurine is placed on a computer desk. The figurine has a round transparent acrylic base, with no text on the base. The content on the computer screen is a 3D modeling process of this figurine. Next to the computer screen is a toy packaging box, designed in a style reminiscent of high-quality collectible figures, printed with original artwork. The packaging features two-dimensional flat illustrations.";
+
+        // Initialize Firebase Authentication
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                console.log("Firebase Auth Ready. User ID:", userId);
+                setupThreeJS();
+                loadFigurines();
+            } else {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            }
+        });
+
+        // Initialize Three.js scene
+        function setupThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, threeCanvas.offsetWidth / threeCanvas.offsetHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, antialias: true, alpha: true });
+            renderer.setSize(threeCanvas.offsetWidth, threeCanvas.offsetHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0xffffff, 1);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            // Create a simple plane for the figurine
+            const geometry = new THREE.PlaneGeometry(3, 3);
+            const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, side: THREE.DoubleSide });
+            figurineMesh = new THREE.Mesh(geometry, material);
+            scene.add(figurineMesh);
+
+            camera.position.z = 5;
+
+            // Add OrbitControls for user interaction
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.maxPolarAngle = Math.PI / 2;
+
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
+        }
+
+        function onWindowResize() {
+            camera.aspect = threeCanvas.offsetWidth / threeCanvas.offsetHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(threeCanvas.offsetWidth, threeCanvas.offsetHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Load figurine from a data URI onto the 3D model
+        function loadFigurineTo3D(dataUri) {
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load(dataUri, (texture) => {
+                const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
+                figurineMesh.material = material;
+            });
+        }
+
+        // Save figurine data to Firestore
+        async function saveFigurine(imageData, userPrompt) {
+            if (!userId) {
+                console.error("User not authenticated. Cannot save.");
+                return;
+            }
+            try {
+                const figurinesCollection = collection(db, `/artifacts/${appId}/public/data/figurines`);
+                await addDoc(figurinesCollection, {
+                    prompt: userPrompt,
+                    imageData: imageData,
+                    createdAt: new Date(),
+                    userId: userId
+                });
+            } catch (error) {
+                console.error("Error saving figurine to Firestore:", error);
+            }
+        }
+
+        // Load figurines from Firestore and update the gallery
+        function loadFigurines() {
+            const figurinesCollection = collection(db, `/artifacts/${appId}/public/data/figurines`);
+            const q = query(figurinesCollection);
+            
+            onSnapshot(q, (snapshot) => {
+                const figurines = [];
+                snapshot.forEach(doc => {
+                    figurines.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Sort by creation time, newest first
+                figurines.sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate());
+
+                figurineGallery.innerHTML = '';
+                if (figurines.length === 0) {
+                    figurineGallery.innerHTML = '<p class="text-center text-gray-500 col-span-full">No figurines in the gallery yet. Be the first to create one!</p>';
+                } else {
+                    figurines.forEach(figurine => {
+                        const img = document.createElement('img');
+                        img.src = `data:image/jpeg;base64,${figurine.imageData}`;
+                        img.alt = figurine.prompt;
+                        img.className = 'w-full h-auto rounded-xl shadow-lg cursor-pointer transition-transform duration-200 hover:scale-105';
+                        img.onclick = () => {
+                            loadFigurineTo3D(img.src);
+                            resultContainer.classList.remove('hidden');
+                        };
+                        figurineGallery.appendChild(img);
+                    });
+                }
+            });
+        }
+
+        // Event listener for the image upload box
+        uploadBox.addEventListener('click', () => uploadInput.click());
+
+        // Event listener for the file input change
+        uploadInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    uploadedImageData = e.target.result.split(',')[1];
+                    uploadBox.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-2xl shadow-inner"/>`;
+                    uploadBox.classList.remove('p-10', 'flex-col');
+                    uploadBox.classList.add('h-64');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Event listener for the generate button
+        generateBtn.addEventListener('click', async () => {
+            if (!uploadedImageData) {
+                showCustomMessage("Please upload an image first.");
+                return;
+            }
+
+            resultContainer.classList.add('hidden');
+            loadingDiv.classList.remove('hidden');
+            generateBtn.disabled = true;
+
+            const userPrompt = `${promptInput.value}. Material is ${document.getElementById('figurine-material').value}.`;
+
+            const payload = {
+                contents: [
+                    {
+                        parts: [
+                            { text: userPrompt },
+                            {
+                                inlineData: {
+                                    mimeType: "image/jpeg",
+                                    data: uploadedImageData
+                                }
+                            }
+                        ]
+                    }
+                ],
+                generationConfig: {
+                    responseModalities: ["TEXT", "IMAGE"],
+                },
+            };
+
+            try {
+                let response = null;
+                let retries = 0;
+                const maxRetries = 5;
+                const baseDelay = 1000;
+
+                while (retries < maxRetries) {
+                    try {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.status !== 429) {
+                            break;
+                        }
+                    } catch (error) {
+                        console.error('Fetch attempt failed:', error);
+                    }
+                    retries++;
+                    await new Promise(res => setTimeout(res, baseDelay * Math.pow(2, retries)));
+                }
+
+                if (!response || !response.ok) {
+                    throw new Error(`HTTP error! status: ${response ? response.status : 'unknown'}`);
+                }
+
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+
+                if (part && part.inlineData && part.inlineData.data) {
+                    const base64Data = part.inlineData.data;
+                    const mimeType = part.inlineData.mimeType || 'image/png';
+                    const dataUri = `data:${mimeType};base64,${base64Data}`;
+                    
+                    loadFigurineTo3D(dataUri);
+                    resultContainer.classList.remove('hidden');
+                    
+                    downloadBtn.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = dataUri;
+                        a.download = 'figurine.png';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    };
+
+                    await saveFigurine(base64Data, userPrompt);
+                } else {
+                    console.error("No image data found in the API response.");
+                    showCustomMessage("Oops! Something went wrong. The AI may not have been able to generate an image. Please try again.");
+                }
+            } catch (error) {
+                console.error('Failed to generate figurine:', error);
+                showCustomMessage("Oops! Something went wrong. Please try again.");
+            } finally {
+                loadingDiv.classList.add('hidden');
+                generateBtn.disabled = false;
+            }
+        });
+
+        // Function to show a custom message box
+        function showCustomMessage(message) {
+            const messageBox = document.createElement('div');
+            messageBox.className = 'fixed inset-0 z-50 bg-gray-600 bg-opacity-50 flex items-center justify-center';
+            messageBox.innerHTML = `
+                <div class="bg-white p-8 rounded-2xl shadow-xl text-center">
+                    <p class="text-xl font-semibold mb-4 text-gray-800">${message}</p>
+                    <button onclick="this.parentNode.parentNode.remove()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-xl transition-colors duration-200">OK</button>
+                </div>
+            `;
+            document.body.appendChild(messageBox);
+        }
+    </script>
+
+    <!-- To enable AdSense, uncomment the script below and replace the values -->
+    <!--
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1234567890" crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-1234567890"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1234567890" crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-1234567890"
+        data-ad-slot="9876543210"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    -->
+</body>
+</html>
