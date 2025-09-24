@@ -3,1100 +3,876 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wellpedia - Your Source for Health Information</title>
-
-    <!-- Google AdSense Script - Place in head -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9651439714273887"
-            crossorigin="anonymous"></script>
-
+    <title>AKRAM JOES GLOBAL MARKET ANALYZER</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Basic Reset & Body */
-        body {
-            font-family: 'Inter', Arial, sans-serif; /* Using Inter for a modern look */
+        * {
             margin: 0;
             padding: 0;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f8f8f8;
-            /* scroll-behavior: smooth; /* Removed for instant scroll on navigation clicks */ */
-            overflow-x: hidden; /* Prevent horizontal scrolling */
-        }
-        html {
-            /* scroll-behavior: smooth; /* Removed for instant scroll on navigation clicks */ */
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            box-sizing: border-box;
         }
 
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Header */
         header {
-            background-color: #0056b3; /* Darker blue for a professional feel */
-            color: white;
-            padding: 15px 0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
         }
 
-        header .container {
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 32px;
-            font-weight: 800; /* Bolder */
-            color: white;
-            text-decoration: none;
-            letter-spacing: -1px;
             display: flex;
             align-items: center;
-            border-radius: 8px; /* Rounded corners */
+            gap: 1rem;
         }
 
-        .logo-icon {
-            margin-right: 10px;
-            font-size: 1.2em;
-            /* Using a simple icon or emoji if no font awesome/lucide available */
+        .logo i {
+            font-size: 2rem;
+            color: #4ade80;
         }
 
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-
-        nav ul li {
-            margin-left: 30px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 5px 0;
-            transition: color 0.3s ease, border-bottom 0.3s ease;
-            border-bottom: 2px solid transparent;
-        }
-
-        nav ul li a:hover {
-            color: #e6f2ff;
-            border-bottom: 2px solid #e6f2ff;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0, 86, 179, 0.7), rgba(0, 86, 179, 0.7)), url('https://placehold.co/1920x800/007bff/ffffff?text=Health+Background') no-repeat center center/cover;
-            color: white;
-            text-align: center;
-            padding: 120px 20px;
-            position: relative;
-            border-radius: 12px; /* Rounded corners */
-            margin: 20px;
-        }
-
-        .hero h1 {
-            font-size: 3.8em;
-            margin-bottom: 20px;
+        .logo h1 {
+            font-size: 1.8rem;
             font-weight: 700;
-            line-height: 1.2;
+            background: linear-gradient(45deg, #4ade80, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .hero p {
-            font-size: 1.4em;
-            margin-bottom: 40px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+        .last-update {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
         }
 
-        .button {
+        .pulse {
             display: inline-block;
-            background-color: #28a745; /* Green button */
-            color: white;
-            padding: 15px 35px;
-            border-radius: 8px; /* Rounded corners */
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-            font-size: 1.1em;
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
         }
 
-        .button:hover {
-            background-color: #218838;
-            transform: translateY(-2px);
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+            }
         }
 
-        /* General Sections */
-        section {
-            padding: 60px 0;
-            margin-top: 20px;
+        main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
         }
 
-        section:nth-of-type(even) {
-            background-color: #f0f5fa; /* Light background for alternating sections */
-            border-radius: 8px;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 40px;
-            color: #0056b3;
-            font-size: 2.5em;
-            font-weight: 700;
-        }
-
-        /* Content Grids (for blogs and reports) */
-        .content-grid {
+        .markets-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
         }
 
-        .card {
-            background-color: white;
-            border-radius: 10px; /* More rounded corners */
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        .market-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer; /* Indicate clickable */
         }
 
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        .market-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4ade80, #22d3ee);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
         }
 
-        .card-img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-bottom: 1px solid #eee;
+        .market-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .card-content {
-            padding: 25px;
-            flex-grow: 1;
+        .market-card:hover::before {
+            transform: translateX(0);
         }
 
-        .card-content h3 {
-            margin-top: 0;
-            color: #0056b3;
-            font-size: 1.8em;
-            line-height: 1.3;
-            margin-bottom: 15px;
-        }
-
-        .card-content p {
-            font-size: 1em;
-            color: #555;
-            line-height: 1.5;
-        }
-
-        .card-footer {
-            padding: 15px 25px;
-            background-color: #f4f7f9;
-            border-top: 1px solid #e0e6eb;
-            font-size: 0.9em;
-            color: #666;
+        .market-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 1rem;
         }
 
-        .card-footer a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.2s ease;
-        }
-
-        .card-footer a:hover {
-            color: #0056b3;
-        }
-
-        /* Disclaimer Section */
-        .disclaimer {
-            background-color: #fff3cd; /* Light yellow background */
-            border-left: 5px solid #ffc107; /* Yellow border */
-            padding: 25px;
-            margin: 40px auto;
-            border-radius: 8px; /* Rounded corners */
-            color: #856404; /* Dark yellow text */
-            font-size: 0.95em;
-            line-height: 1.6;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .disclaimer h3 {
-            margin-top: 0;
-            color: #856404;
-            font-size: 1.5em;
-            text-align: left;
-            margin-bottom: 15px;
-        }
-
-        /* Ad Section */
-        .ad-section {
-            text-align: center;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: #e9ecef; /* Light gray background */
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-        }
-
-        /* Footer */
-        footer {
-            background-color: #212529; /* Darker footer */
-            color: white;
-            text-align: center;
-            padding: 30px 0;
-            margin-top: 60px;
-            border-top-left-radius: 12px;
-            border-top-right-radius: 12px;
-        }
-
-        footer a {
-            color: #89b4f8; /* Lighter link color */
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        footer a:hover {
-            color: #b0d8f8;
-        }
-
-        /* Contact Form Styles (if using for contact.html within the single file) */
-        .contact-form {
-            max-width: 700px;
-            margin: 30px auto;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-        }
-        .contact-form label {
-            display: block;
-            margin-bottom: 10px;
+        .market-name {
+            font-size: 1.2rem;
             font-weight: 600;
-            color: #333;
-        }
-        .contact-form input[type="text"],
-        .contact-form input[type="email"],
-        .contact-form textarea {
-            width: calc(100% - 22px); /* Adjust for padding + border */
-            padding: 12px;
-            margin-bottom: 25px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1.05em;
-            box-sizing: border-box; /* Include padding/border in width */
-        }
-        .contact-form textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-        .contact-form .button {
-            display: block;
-            width: 100%;
-            text-align: center;
-            padding: 15px;
-            font-size: 1.2em;
-            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 10000; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+        .market-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 30px;
-            border: 1px solid #888;
-            width: 80%; /* Could be responsive */
-            max-width: 800px;
-            border-radius: 10px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        .market-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .market-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .positive {
+            color: #4ade80;
+        }
+
+        .negative {
+            color: #f87171;
+        }
+
+        .chart-container {
             position: relative;
-            animation: fadeIn 0.3s ease-out;
-            max-height: 90vh; /* Limit height to prevent overflow on small screens */
-            overflow-y: auto; /* Enable scrolling within modal content */
+            height: 150px;
+            margin-top: 1rem;
         }
 
-        .modal-content h3 {
-            color: #0056b3;
-            font-size: 2em;
-            margin-top: 0;
-            margin-bottom: 15px;
+        .overview-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .modal-content p {
-            font-size: 1.1em;
-            color: #444;
-            line-height: 1.6;
-            margin-bottom: 10px;
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
-        .modal-close-button {
-            color: #aaa;
-            font-size: 36px;
-            font-weight: bold;
-            position: absolute;
-            top: 10px;
-            right: 20px;
+        .overview-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .time-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .time-filter {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
             cursor: pointer;
-            transition: color 0.2s ease;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
-        .modal-close-button:hover,
-        .modal-close-button:focus {
-            color: #333;
-            text-decoration: none;
+        .time-filter:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .time-filter.active {
+            background: linear-gradient(45deg, #4ade80, #22d3ee);
+            border-color: transparent;
         }
 
-        /* Responsive adjustments */
+        .main-chart-container {
+            position: relative;
+            height: 400px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #4ade80;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .api-key-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #fff;
+            margin-right: 0.5rem;
+            width: 200px;
+        }
+
+        .api-key-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .save-key-btn {
+            background: linear-gradient(45deg, #4ade80, #22d3ee);
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .save-key-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .error-message {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #f87171;
+            text-align: center;
+        }
+
+        .brand-highlight {
+            background: linear-gradient(45deg, #4ade80, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
         @media (max-width: 768px) {
-            header .container {
+            .header-content {
                 flex-direction: column;
-                text-align: center;
+                gap: 1rem;
             }
-            nav ul {
+
+            .markets-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-header {
                 flex-direction: column;
-                align-items: center;
-                margin-top: 20px;
+                gap: 1rem;
+                align-items: flex-start;
             }
-            nav ul li {
-                margin: 10px 0;
+
+            .time-filters {
+                width: 100%;
+                justify-content: space-between;
             }
-            .hero {
-                padding: 80px 20px;
-                margin: 10px;
+
+            .api-key-section {
+                flex-direction: column;
+                align-items: stretch;
             }
-            .hero h1 {
-                font-size: 2.5em;
-            }
-            .hero p {
-                font-size: 1.1em;
-            }
-            h2 {
-                font-size: 2em;
-            }
-            .card-content h3 {
-                font-size: 1.4em;
-            }
-            .disclaimer, .ad-section {
-                margin: 20px 10px;
-            }
-            .modal-content {
-                width: 95%;
-                padding: 20px;
+
+            .api-key-input {
+                width: 100%;
+                margin-bottom: 0.5rem;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <a href="#home" class="logo"><span class="logo-icon">&#128151;</span> Wellpedia</a>
-            <nav>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#blogs-section">Blogs</a></li>
-                    <li><a href="#reports-section">Reports</a></li>
-                    <li><a href="#about-section">About</a></li>
-                    <li><a href="#contact-section">Contact</a></li>
-                </ul>
-            </nav>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <h1>AKRAM JOES GLOBAL MARKET ANALYZER</h1>
+            </div>
+            <div class="last-update">
+                <span class="pulse"></span>
+                <span id="lastUpdate">Initializing...</span>
+            </div>
         </div>
     </header>
 
     <main>
-        <section id="home" class="hero">
-            <div class="container">
-                <h1>Empowering Health Knowledge for a Better You</h1>
-                <p>Wellpedia provides reliable, evidence-based health information and medical reports to help you live a healthier life.</p>
-                <a href="#blogs-section" class="button">Read Our Latest Blogs</a>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+        
+        <div class="markets-grid" id="marketsGrid">
+            <!-- Market cards will be dynamically generated -->
+        </div>
+
+        <div class="overview-section">
+            <div class="overview-header">
+                <h2 class="overview-title">Global Market Overview</h2>
+                <div class="time-filters">
+                    <button class="time-filter" data-period="1D">1D</button>
+                    <button class="time-filter active" data-period="1W">1W</button>
+                    <button class="time-filter" data-period="1M">1M</button>
+                    <button class="time-filter" data-period="3M">3M</button>
+                    <button class="time-filter" data-period="1Y">1Y</button>
+                </div>
             </div>
-        </section>
-
-        <!-- Google AdSense Ad Unit for Home Section -->
-        <section class="ad-section container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-9651439714273887"
-                 data-ad-slot="7727380920"  <!-- Use 0 for auto-ads if no specific unit ID -->
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </section>
-
-        <section id="blogs-section" class="container">
-            <h2>Our Latest Blog Posts</h2>
-            <p style="text-align: center; margin-bottom: 40px; font-size: 1.1em; color: #555;">Dive into our articles covering various health topics, from daily wellness tips to in-depth guides.</p>
-            <div id="blogs-list" class="content-grid">
-                <!-- Blog cards will be dynamically loaded here by JavaScript -->
+            
+            <div class="main-chart-container">
+                <canvas id="mainChart"></canvas>
             </div>
-            <p style="text-align: center; margin-top: 40px;">
-                <a href="#blogs-section" class="button">View All Blogs</a>
-            </p>
-        </section>
 
-        <!-- Google AdSense Ad Unit for Blogs Section -->
-        <section class="ad-section container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-9651439714273887"
-                 data-ad-slot="0" <!-- Use 0 for auto-ads if no specific unit ID -->
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </section>
-
-        <section id="reports-section" class="container">
-            <h2>Authentic Medical Reports</h2>
-            <p style="text-align: center; margin-bottom: 40px; font-size: 1.1em; color: #555;">Access verified reports and guidelines from leading global health organizations like WHO and CDC.</p>
-            <div id="reports-list" class="content-grid">
-                <!-- Report cards will be dynamically loaded here by JavaScript -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Volume</div>
+                    <div class="stat-value" id="totalVolume">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Market Cap</div>
+                    <div class="stat-value" id="marketCap">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Markets</div>
+                    <div class="stat-value" id="activeMarkets">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg. Change</div>
+                    <div class="stat-value" id="avgChange">0%</div>
+                </div>
             </div>
-            <p style="text-align: center; margin-top: 40px;">
-                <a href="#reports-section" class="button">View All Reports</a>
-            </p>
-        </section>
-
-        <!-- Google AdSense Ad Unit for Reports Section -->
-        <section class="ad-section container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-9651439714273887"
-                 data-ad-slot="0" <!-- Use 0 for auto-ads if no specific unit ID -->
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </section>
-
-        <section id="about-section" class="container">
-            <h2>About Wellpedia</h2>
-            <p>Welcome to Wellpedia, your trusted online resource for evidence-based health information and medical insights. Our mission is to empower individuals with reliable knowledge to make informed decisions about their well-being.</p>
-            <p>We are committed to curating and presenting high-quality content, from engaging blog posts on healthy living to important medical reports from reputable global health organizations. Our goal is to make complex health topics accessible and understandable for everyone.</p>
-
-            <h3>Our Approach to Content</h3>
-            <ul>
-                <li><strong>Accuracy & Reliability:</strong> We strive for accuracy by sourcing information from authoritative bodies like the World Health Organization (WHO), Centers for Disease Control and Prevention (CDC), and peer-reviewed medical journals.</li>
-                <li><strong>Professional Collaboration:</strong> We partner with qualified health professionals (doctors, nutritionists, public health experts) to review content and provide expert perspectives.</li>
-                <li><strong>Clarity & Engagement:</strong> Our content is designed to be clear, easy to understand, and engaging, using various formats like articles, summaries, and infographics.</li>
-                <li><strong>Niche Focus:</strong> While covering broad health topics, we aim to delve deeper into specific areas of interest to our audience, ensuring relevance and depth.</li>
-            </ul>
-
-            <h3 id="disclaimer-about">Medical Disclaimer</h3>
-            <div class="disclaimer">
-                <p>The information provided on Wellpedia is for educational and informational purposes only, and does not constitute medical advice. It is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this website.</p>
-                <p>We are not medical professionals. Content accuracy is strived for but not guaranteed. Always cross-reference with official medical guidelines and consult a healthcare provider for personalized advice.</p>
-            </div>
-        </section>
-
-        <section id="contact-section" class="container">
-            <h2>Contact Us</h2>
-            <p style="text-align: center; margin-bottom: 40px;">We'd love to hear from you! Whether you have feedback, suggestions, or potential collaboration inquiries, feel free to reach out.</p>
-
-            <div class="contact-form">
-                <p><strong>Email:</strong> kaigwaakram123@.com </p>
-                <p><strong>General Inquiries:</strong> contact:kaigwaakram123@.com </p>
-                <p><strong>Collaborations:</strong> partnerships:kaigwaakram123@.com </p>
-                <p><strong>Location:</strong> Buloba, Central Region, Uganda</p>
-                <p style="margin-top: 30px; font-weight: bold; color: #7535dc;">Please note: We dont provide alternatives to medical treatment as this is for educational purposes only. For personal health concerns, please consult a qualified healthcare professional.</p>
-            </div>
-        </section>
-
-        <!-- Google AdSense Ad Unit for Contact Section -->
-        <section class="ad-section container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-9651439714273887"
-                 data-ad-slot="0" <!-- Use 0 for auto-ads if no specific unit ID -->
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </section>
-
+        </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Wellpedia. All rights reserved. <a href="#about-section">Disclaimer</a></p>
-        </div>
-    </footer>
-
-    <!-- Blog Read More Modal -->
-    <div id="blog-modal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close-button">&times;</span>
-            <h3 id="modal-blog-title"></h3>
-            <p><small>By <span id="modal-blog-author"></span> on <span id="modal-blog-date"></span></small></p>
-            <p id="modal-blog-content"></p>
-            <!-- Google AdSense Ad Unit within modal (optional, consider user experience) -->
-            <ins class="adsbygoogle"
-                 style="display:block; margin-top: 20px;"
-                 data-ad-client="ca-pub-9651439714273887"
-                 data-ad-slot="0" <!-- Use 0 for auto-ads if no specific unit ID -->
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
-    </div>
-
-
     <script>
-        // Hardcoded Blog Posts Data
-        const blogsData = [
-            {
-                "id": "blog-01",
-                "title": "5 Healthy Habits to Boost Your Day",
-                "excerpt": "Discover simple yet powerful habits that can transform your daily routine and improve overall well-being. From hydrating first thing in the morning to practicing mindful breathing, these tips can make a significant difference in your physical and mental health. Incorporating these small changes consistently can lead to substantial long-term benefits, helping you feel more energetic, focused, and balanced throughout your day. Consistency is truly key to building lasting habits that contribute to a healthier lifestyle.",
-                "author": "Wellpedia Team",
-                "date": "June 15, 2025",
-                "image": "https://placehold.co/600x400/007bff/ffffff?text=Healthy+Habits+%26+Wellness"
-            },
-            {
-                "id": "blog-02",
-                "title": "Understanding Mental Health: A Basic Guide",
-                "excerpt": "A foundational look into common mental health concepts and how to promote emotional well-being. This guide covers essential aspects of psychological wellness, including recognizing common signs of stress or distress, the importance of self-care practices, and when and how to seek professional support. Understanding mental health is crucial for a holistic approach to personal well-being, emphasizing that it is just as vital as physical health.",
-                "author": "Dr. Aisha Nalubega",
-                "date": "June 10, 2025",
-                "image": "https://placehold.co/600x400/28a745/ffffff?text=Mind+%26+Wellbeing"
-            },
-            {
-                "id": "blog-03",
-                "title": "The Benefits of Regular Exercise",
-                "excerpt": "From physical fitness to mental clarity, explore why daily movement is crucial for a healthy life. Regular exercise is known to help manage weight, significantly reduce the risk of chronic diseases such as heart disease and diabetes, improve mood by releasing endorphins, and boost overall energy levels. Finding an enjoyable activity, whether it's walking, swimming, or dancing, makes it easier to stick to a routine and reap the manifold health benefits.",
-                "author": "Wellpedia Team",
-                "date": "June 5, 2025",
-                "image": "https://placehold.co/600x400/ffc107/333333?text=Active+Lifestyle"
-            },
-            {
-                "id": "blog-04",
-                "title": "Navigating Healthy Eating in Uganda",
-                "excerpt": "Tips for balanced nutrition using locally available ingredients and traditional foods in Uganda. This guide helps you discover how to incorporate fresh fruits, vegetables, and lean proteins readily found in local markets into your daily diet for optimal health. Emphasizing culturally relevant and sustainable food choices, eating local is often eating healthier and supports your community.",
-                "author": "Nutritionist S. Kagga",
-                "date": "May 28, 2025",
-                "image": "https://placehold.co/600x400/6f42c1/ffffff?text=Ugandan+Nutrition"
-            },
-            {
-                "id": "blog-05",
-                "title": "Stress Management Techniques for a Busy Life",
-                "excerpt": "Practical strategies to reduce stress and maintain calm in your everyday routine. This article delves into various effective techniques, including mindfulness exercises, efficient time management, deep relaxation methods, and the critical importance of setting healthy boundaries to protect your mental peace. Learning to manage stress is vital for preventing burnout and maintaining long-term health and productivity. Don't let stress take over your life!",
-                "author": "Wellpedia Team",
-                "date": "May 20, 2025",
-                "image": "https://placehold.co/600x400/dc3545/ffffff?text=Stress+Management"
-            },
-            {
-                "id": "blog-06",
-                "title": "The Importance of Sleep for Health",
-                "excerpt": "Unpack the vital role of quality sleep in physical and cognitive functions. Good sleep is fundamental for improved concentration, enhanced productivity, better athletic performance, and a robust immune system. This article highlights why prioritizing sufficient, restful sleep is not a luxury but a necessity for better overall health, influencing everything from mood to metabolic function.",
-                "author": "Dr. Michael Okello",
-                "date": "May 15, 2025",
-                "image": "https://placehold.co/600x400/17a2b8/ffffff?text=Quality+Sleep"
-            },
-            {
-                "id": "blog-07",
-                "title": "Understanding Diabetes: Prevention and Management",
-                "excerpt": "A detailed look at diabetes, its risk factors, and effective ways to manage the condition. This comprehensive guide covers crucial aspects such as the impact of dietary changes, the role of regular exercise, and various medical interventions that can help prevent or effectively control diabetes. Empower yourself with knowledge to take proactive steps towards managing this condition.",
-                "author": "Wellpedia Team",
-                "date": "May 8, 2025",
-                "image": "https://placehold.co/600x400/fd7e14/ffffff?text=Diabetes+Care"
-            },
-            {
-                "id": "blog-08",
-                "title": "First Aid Basics: What Everyone Should Know",
-                "excerpt": "Essential first aid knowledge for common injuries and emergencies. Knowing basic first aid can be life-saving, preventing injuries from worsening and providing crucial immediate care before professional medical help arrives. Be prepared for situations ranging from minor cuts and burns to more serious sprains and emergencies, enhancing safety for yourself and those around you.",
-                "author": "Nurse J. Nakato",
-                "date": "May 1, 2025",
-                "image": "https://placehold.co/600x400/6610f2/ffffff?text=First+Aid+Kit"
-            },
-            {
-                "id": "blog-09",
-                "title": "Hydration Hacks: Staying Well-Hydrated Daily",
-                "excerpt": "Creative tips and reminders to ensure you drink enough water throughout the day. Discover why optimal hydration is vital for sustaining energy levels, maintaining healthy skin, and supporting overall bodily functions. This article provides practical 'hacks' to make drinking water an enjoyable and consistent habit, ensuring your body performs at its best.",
-                "author": "Wellpedia Team",
-                "date": "April 25, 2025",
-                "image": "https://placehold.co/600x400/e83e8c/ffffff?text=Hydration+Tips"
-            },
-            {
-                "id": "blog-10",
-                "title": "Boosting Your Immune System Naturally",
-                "excerpt": "Explore natural ways to strengthen your body's defenses against illness. Learn about the power of nutrient-rich foods, effective stress reduction techniques, and smart lifestyle choices that can support a robust immune system. A strong and resilient immune system is your best defense against common ailments and keeps you healthy year-round.",
-                "author": "Wellpedia Team",
-                "date": "April 18, 2025",
-                "image": "https://placehold.co/600x400/20c997/ffffff?text=Immune+Boost"
-            },
-            {
-                "id": "blog-11",
-                "title": "The Role of Probiotics in Gut Health",
-                "excerpt": "Learn about the benefits of probiotics and how they contribute to a healthy digestive system. This article helps you understand how a balanced gut microbiome impacts not only digestion but also immunity and even mood. Cultivating a 'happy gut' can lead to significant improvements in overall health and well-being.",
-                "author": "Nutritionist S. Kagga",
-                "date": "April 10, 2025",
-                "image": "https://placehold.co/600x400/6f42c1/ffffff?text=Gut+Microbiome"
-            },
-            {
-                "id": "blog-12",
-                "title": "Preventing Heart Disease: A Lifestyle Approach",
-                "excerpt": "Actionable steps you can take to maintain heart health and significantly reduce cardiovascular risks. This comprehensive guide emphasizes the importance of a heart-healthy diet, regular physical exercise, effective stress management techniques, and consistent regular check-ups. Protecting your heart is vital for a long and healthy life, and these lifestyle changes are powerful tools.",
-                "author": "Dr. Michael Okello",
-                "date": "April 2, 2025",
-                "image": "https://placehold.co/600x400/dc3545/ffffff?text=Heart+Care"
-            },
-            {
-                "id": "blog-13",
-                "title": "Managing Allergies: Tips for a Better Spring",
-                "excerpt": "Strategies to cope with seasonal allergies and minimize their impact on your daily life. Learn about common allergens, effective preventative measures you can take, and various treatment options to help you enjoy every season without the discomfort of allergy symptoms. Breathe easier and live better with these practical tips.",
-                "author": "Wellpedia Team",
-                "date": "March 25, 2025",
-                "image": "https://placehold.co/600x400/ffc107/333333?text=Allergy+Relief"
-            },
-            {
-                "id": "blog-14",
-                "title": "Understanding Childhood Vaccinations",
-                "excerpt": "An overview of routine childhood vaccinations and their immense importance for public health. Vaccinations are a cornerstone of preventative medicine, protecting children from serious diseases and significantly contributing to community immunity, thereby safeguarding vulnerable populations. Understand the scientific basis and public health benefits behind them.",
-                "author": "Nurse J. Nakato",
-                "date": "March 18, 2025",
-                "image": "https://placehold.co/600x400/17a2b8/ffffff?text=Child+Vaccines"
-            },
-            {
-                "id": "blog-15",
-                "title": "The Power of Mindfulness Meditation",
-                "excerpt": "Explore how mindfulness can profoundly reduce stress, improve focus, and enhance emotional regulation. Incorporate simple mindfulness practices into your daily routine for greater calm, clarity, and presence. Cultivating mindfulness can lead to a more peaceful and balanced life, allowing you to respond to challenges with greater equanimity.",
-                "author": "Wellpedia Team",
-                "date": "March 10, 2025",
-                "image": "https://placehold.co/600x400/28a745/ffffff?text=Mindful+Living"
-            },
-            {
-                "id": "blog-16",
-                "title": "Healthy Aging: Tips for Seniors",
-                "excerpt": "Advice on maintaining physical and mental vitality as you age. This guide provides practical tips on nutrition, appropriate exercise, fostering social engagement, and cognitive health strategies to help you enjoy a vibrant and fulfilling life in your golden years. Age gracefully, healthily, and with purpose.",
-                "author": "Wellpedia Team",
-                "date": "March 3, 2025",
-                "image": "https://placehold.co/600x400/007bff/ffffff?text=Senior+Wellness"
-            },
-            {
-                "id": "blog-17",
-                "title": "Decoding Food Labels: What to Look For",
-                "excerpt": "Learn how to read and understand nutrition labels to make informed food choices effectively. This article helps you identify key nutrients, understand serving sizes, and decipher ingredient lists to choose healthier options for you and your family. Becoming an expert at reading food labels empowers you to make smarter dietary decisions.",
-                "author": "Nutritionist S. Kagga",
-                "date": "February 25, 2025",
-                "image": "https://placehold.co/600x400/6610f2/ffffff?text=Food+Label+Guide"
-            },
-            {
-                "id": "blog-18",
-                "title": "Common Cold vs. Flu: Knowing the Difference",
-                "excerpt": "Distinguish between symptoms of the common cold and influenza for better self-care and knowing when to seek medical attention. Understanding the nuances between these two common respiratory illnesses helps in proper management, prevents unnecessary anxiety, and reduces the risk of complications. Be informed to make the right health decisions.",
-                "author": "Dr. Aisha Nalubega",
-                "date": "February 18, 2025",
-                "image": "https://placehold.co/600x400/e83e8c/ffffff?text=Cold+or+Flu%3F"
-            },
-            {
-                "id": "blog-19",
-                "title": "The Benefits of Outdoor Activities",
-                "excerpt": "How spending time in nature can positively impact your physical and mental health. From improving mood and reducing stress to boosting Vitamin D levels and enhancing physical fitness, discover why getting outside is profoundly good for you. Embrace the outdoors and integrate natural environments into your wellness routine for a revitalized mind and body.",
-                "author": "Wellpedia Team",
-                "date": "February 10, 2025",
-                "image": "https://placehold.co/600x400/20c997/ffffff?text=Nature+Therapy"
-            },
-            {
-                "id": "blog-20",
-                "title": "Managing Chronic Pain Naturally",
-                "excerpt": "Explore non-pharmacological approaches to alleviate and manage persistent pain. This article delves into various lifestyle adjustments, alternative therapies such as acupuncture or massage, and self-care techniques like heat therapy or gentle exercise that can help improve your quality of life. Finding natural relief methods can complement medical treatments and enhance overall well-being.",
-                "author": "Wellpedia Team",
-                "date": "February 3, 2025",
-                "image": "https://placehold.co/600x400/fd7e14/ffffff?text=Pain+Management"
-            },
-            {
-                "id": "blog-21",
-                "title": "The Importance of Regular Check-ups",
-                "excerpt": "Why preventive medical check-ups are crucial for early detection and maintaining health. Regular visits to your doctor can help identify potential health issues before they become serious, allowing for timely intervention and better outcomes. This proactive approach to healthcare emphasizes that prioritizing your health through routine screenings is an investment in your future well-being.",
-                "author": "Dr. Michael Okello",
-                "date": "January 28, 2025",
-                "image": "https://placehold.co/600x400/6f42c1/ffffff?text=Health+Checkup"
-            }
+        // Market data structure with real symbols
+        const markets = [
+            { id: 'sp500', name: 'S&P 500', symbol: 'SPY', icon: 'fa-chart-bar' },
+            { id: 'nasdaq', name: 'NASDAQ', symbol: 'QQQ', icon: 'fa-microchip' },
+            { id: 'dow', name: 'Dow Jones', symbol: 'DIA', icon: 'fa-industry' },
+            { id: 'nyse', name: 'NYSE', symbol: 'NYA', icon: 'fa-building' },
+            { id: 'ftse', name: 'FTSE 100', symbol: 'UKX', icon: 'fa-crown' },
+            { id: 'nikkei', name: 'Nikkei 225', symbol: 'NKY', icon: 'fa-yen-sign' }
         ];
 
-        // Hardcoded Medical Reports Data
-        const reportsData = [
-            {
-                "id": "report-01",
-                "title": "WHO Global Tuberculosis Report 2023",
-                "source": "World Health Organization (WHO)",
-                "date": "November 2023",
-                "summary": "Comprehensive overview of the TB epidemic, diagnosis, treatment, and prevention efforts globally.",
-                "source_url": "https://www.who.int/publications/i/item/9789240083812"
-            },
-            {
-                "id": "report-02",
-                "title": "Dietary Guidelines for Americans 2020-2025",
-                "source": "USDA & HHS",
-                "date": "December 2020",
-                "summary": "Evidence-based recommendations for healthy eating patterns for people ages 2 and older.",
-                "source_url": "https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf"
-            },
-            {
-                "id": "report-03",
-                "title": "CDC - National Diabetes Statistics Report 2020",
-                "source": "Centers for Disease Control and Prevention (CDC)",
-                "date": "February 2020",
-                "summary": "Key statistics about diabetes in the U.S., including prevalence, incidence, and complications.",
-                "source_url": "https://www.cdc.gov/diabetes/data/statistics/statistics-report.html"
-            },
-            {
-                "id": "report-04",
-                "title": "The State of the World's Children 2023: For Every Child, Every Right",
-                "source": "UNICEF",
-                "date": "November 2023",
-                "summary": "Examines the status of child rights globally and highlights ongoing challenges.",
-                "source_url": "https://www.unicef.org/reports/state-worlds-children-2023"
-            },
-            {
-                "id": "report-05",
-                "title": "World Mental Health Report: Transforming Mental Health for All",
-                "source": "World Health Organization (WHO)",
-                "date": "June 2022",
-                "summary": "Provides a comprehensive overview of global mental health challenges and opportunities.",
-                "source_url": "https://www.who.int/publications/i/item/9789240049337"
-            },
-            {
-                "id": "report-06",
-                "title": "Lancet Countdown on Health and Climate Change: 2023 Report",
-                "source": "The Lancet",
-                "date": "October 2023",
-                "summary": "Analyzes the evolving health impacts of climate change and progress on mitigation.",
-                "source_url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(23)02013-5/fulltext"
-            },
-            {
-                "id": "report-07",
-                "title": "Global Nutrition Report 2023: Accelerating progress on nutrition in a changing world",
-                "source": "Global Nutrition Report",
-                "date": "November 2023",
-                "summary": "Assesses progress towards global nutrition targets and highlights areas for action.",
-                "source_url": "https://globalnutritionreport.org/reports/2023-global-nutrition-report/"
-            },
-            {
-                "id": "report-08",
-                "title": "WHO Guidelines on Physical Activity and Sedentary Behaviour",
-                "source": "World Health Organization (WHO)",
-                "date": "November 2020",
-                "summary": "Provides recommendations on the amount of physical activity needed for health benefits.",
-                "source_url": "https://www.who.int/publications/i/item/9789240015127"
-            },
-            {
-                "id": "report-09",
-                "title": "CDC - Tobacco Use Among Middle and High School Students — United States, 2023",
-                "source": "Centers for Disease Control and Prevention (CDC)",
-                "date": "December 2023",
-                "summary": "Latest data on tobacco product use among youth in the U.S.",
-                "source_url": "https://www.cdc.gov/mmwr/volumes/72/wr/mm7249a1.htm"
-            },
-            {
-                "id": "report-10",
-                "title": "UNAIDS Global AIDS Update 2023: The Path That Ends AIDS",
-                "source": "UNAIDS",
-                "date": "July 2023",
-                "summary": "Reviews progress towards ending the AIDS epidemic and highlights remaining challenges.",
-                "source_url": "https://www.unaids.org/en/resources/documents/2023/global-aids-update-2023"
-            },
-            {
-                "id": "report-11",
-                "title": "WHO Global Report on Traditional, Complementary and Integrative Health and Medicine 2019",
-                "source": "World Health Organization (WHO)",
-                "date": "2019",
-                "summary": "A comprehensive report on the status and trends of traditional medicine worldwide.",
-                "source_url": "https://www.who.int/publications/i/item/9789241517481"
-            },
-            {
-                "id": "report-12",
-                "title": "IPCC Sixth Assessment Report (AR6) - Synthesis Report (2023)",
-                "source": "Intergovernmental Panel on Climate Change (IPCC)",
-                "date": "March 2023",
-                "summary": "Synthesizes findings from the AR6 cycles, covering climate change impacts, adaptation, and mitigation.",
-                "source_url": "https://www.ipcc.ch/report/ar6/syr/"
-            },
-            {
-                "id": "report-13",
-                "title": "UNICEF Annual Report 2023",
-                "source": "UNICEF",
-                "date": "May 2024 (expected for 2023 data)",
-                "summary": "Overview of UNICEF's work and financial performance in 2023.",
-                "source_url": "https://www.unicef.org/reports/annual-report-2023-coming-soon"
-            },
-            {
-                "id": "report-14",
-                "title": "WHO Report on the Global Tobacco Epidemic 2023",
-                "source": "World Health Organization (WHO)",
-                "date": "July 2023",
-                "summary": "Focuses on protecting people from tobacco smoke and promoting smoke-free environments.",
-                "source_url": "https://www.who.int/publications/i/item/9789240078870"
-            },
-            {
-                "id": "report-15",
-                "title": "The Global Burden of Disease Study 2019 (GBD 2019) – Key Findings",
-                "source": "Institute for Health Metrics and Evaluation (IHME)",
-                "date": "October 2020",
-                "summary": "Quantifies the health loss from hundreds of diseases, injuries, and risk factors by age, sex, and population.",
-                "source_url": "https://www.healthdata.org/gbd/2019"
-            },
-            {
-                "id": "report-16",
-                "title": "WHO Recommended COVID-19 Vaccinations: Interim recommendations",
-                "source": "World Health Organization (WHO)",
-                "date": "October 2023 (latest update)",
-                "summary": "Updates on WHO's recommendations for COVID-19 vaccination strategies.",
-                "source_url": "https://www.who.int/publications/i/item/WHO-2019-nCoV-Vaccines-SAGE_recommendations-2023.1-eng"
-            },
-            {
-                "id": "report-17",
-                "title": "UN Environment Programme: Global Chemicals Outlook II",
-                "source": "UNEP",
-                "date": "March 2019",
-                "summary": "Addresses the impacts of chemicals on health and the environment globally.",
-                "source_url": "https://www.unep.org/resources/report/global-chemicals-outlook-ii"
-            },
-            {
-                "id": "report-18",
-                "title": "Global Hepatitis Report 2024",
-                "source": "World Health Organization (WHO)",
-                "date": "April 2024",
-                "summary": "Assesses the global progress and challenges in eliminating viral hepatitis.",
-                "source_url": "https://www.who.int/publications/i/item/9789240093842"
-            },
-            {
-                "id": "report-19",
-                "title": "Road Safety Annual Report 2023",
-                "source": "International Transport Forum (ITF)",
-                "date": "May 2023",
-                "summary": "Provides key data and analysis on road safety trends in member countries.",
-                "source_url": "https://www.itf-oecd.org/road-safety-annual-report-2023"
-            },
-            {
-                "id": "report-20",
-                "title": "The Economic Burden of Non-Communicable Diseases (NCDs)",
-                "source": "World Economic Forum & Harvard School of Public Health",
-                "date": "September 2011 (classic, widely cited)",
-                "summary": "Highlights the substantial economic impact of NCDs globally.",
-                "source_url": "https://www3.weforum.org/docs/WEF_Harvard_HE_GlobalEconomicBurdenNonCommunicableDiseases_2011.pdf"
-            },
-            {
-                "id": "report-21",
-                "title": "WHO Recommendations on Antenatal Care for a Positive Pregnancy Experience",
-                "source": "World Health Organization (WHO)",
-                "date": "November 2016",
-                "summary": "Guidelines for essential care throughout pregnancy to improve maternal and perinatal outcomes.",
-                "source_url": "https://www.who.int/publications/i/item/9789241549918"
-            },
-            {
-                "id": "report-22",
-                "title": "State of the World's Midwifery 2021",
-                "source": "UNFPA, WHO, ICM",
-                "date": "December 2021",
-                "summary": "Assesses the midwifery workforce and its contribution to maternal and newborn health.",
-                "source_url": "https://www.who.int/publications/i/item/9789240039277"
-            },
-            {
-                "id": "report-23",
-                "title": "Global Report on Diabetes",
-                "source": "World Health Organization (WHO)",
-                "date": "April 2016",
-                "summary": "First global report to document the burden of diabetes and outline steps for prevention and care.",
-                "source_url": "https://www.who.int/publications/i/item/9789241565253"
-            },
-            {
-                "id": "report-24",
-                "title": "CDC - Childhood Obesity Facts",
-                "source": "Centers for Disease Control and Prevention (CDC)",
-                "date": "Latest update on page",
-                "summary": "Key statistics and information on childhood obesity in the U.S.",
-                "source_url": "https://www.cdc.gov/obesity/data/childhood.html"
-            },
-            {
-                "id": "report-25",
-                "title": "Global Malaria Programme: World Malaria Report 2023",
-                "source": "World Health Organization (WHO)",
-                "date": "December 2023",
-                "summary": "Provides a comprehensive update on global and regional malaria trends.",
-                "source_url": "https://www.who.int/teams/global-malaria-programme/reports/world-malaria-report-2023"
-            },
-            {
-                "id": "report-26",
-                "title": "WHO Guidelines for Drinking-water Quality: 4th edition incorporating the 1st addendum",
-                "source": "World Health Organization (WHO)",
-                "date": "2017",
-                "summary": "International reference for setting drinking-water standards.",
-                "source_url": "https://www.who.int/publications/i/item/9789241549956"
-            },
-            {
-                "id": "report-27",
-                "title": "The Global Health Observatory (GHO) data repository - SDG 3 data",
-                "source": "World Health Organization (WHO)",
-                "date": "Continuous updates",
-                "summary": "WHO's main health statistics repository for global health trends related to Sustainable Development Goal 3.",
-                "source_url": "https://www.who.int/data/gho/data/themes/sdg-3-data"
-            },
-            {
-                "id": "report-28",
-                "title": "Global Report on Drowning",
-                "source": "World Health Organization (WHO)",
-                "date": "November 2014",
-                "summary": "The first WHO report dedicated to drowning prevention, offering a public health perspective.",
-                "source_url": "https://www.who.int/publications/i/item/global-report-on-drowning"
-            },
-            {
-                "id": "report-29",
-                "title": "WHO Global Status Report on Alcohol and Health 2018",
-                "source": "World Health Organization (WHO)",
-                "date": "September 2018",
-                "summary": "Provides a comprehensive overview of the global, regional and country consumption of alcohol.",
-                "source_url": "https://www.who.int/publications/i/item/9789241565635"
-            },
-            {
-                "id": "report-30",
-                "title": "The Global Action Plan for the Prevention and Control of NCDs 2013-2020",
-                "source": "World Health Organization (WHO)",
-                "date": "2013",
-                "summary": "Framework for Member States to achieve the global target of a 25% reduction in premature mortality from NCDs by 2025.",
-                "source_url": "https://www.who.int/publications/i/item/9789241506232"
+        // Initialize market data
+        const marketData = {};
+        markets.forEach(market => {
+            marketData[market.id] = {
+                ...market,
+                currentValue: 0,
+                change: 0,
+                changePercent: 0,
+                history: [],
+                lastUpdated: null
+            };
+        });
+
+        // API Configuration
+        let apiKey = localStorage.getItem('alphaVantageApiKey') || '';
+        const API_BASE_URL = 'https://www.alphavantage.co/query';
+
+        // Check for API key
+        function checkApiKey() {
+            if (!apiKey) {
+                showApiKeyPrompt();
+                return false;
             }
-        ];
+            return true;
+        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Get elements for dynamic content
-            const blogsList = document.getElementById('blogs-list');
-            const reportsList = document.getElementById('reports-list');
+        // Show API key prompt
+        function showApiKeyPrompt() {
+            const grid = document.getElementById('marketsGrid');
+            grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                    <h3 style="margin-bottom: 1rem;">API Key Required</h3>
+                    <p style="margin-bottom: 1.5rem; color: #94a3b8;">
+                        <span class="brand-highlight">AKRAM JOES GLOBAL MARKET ANALYZER</span> requires a free Alpha Vantage API key to display real market data.
+                    </p>
+                    <div class="api-key-section" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <input type="text" 
+                               class="api-key-input" 
+                               id="apiKeyInput" 
+                               placeholder="Enter your API key"
+                               maxlength="20">
+                        <button class="save-key-btn" onclick="saveApiKey()">Save Key</button>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
+                        Get your free API key at: <a href="https://www.alphavantage.co/support/#api-key" target="_blank" style="color: #4ade80;">alphavantage.co</a>
+                    </p>
+                </div>
+            `;
+        }
 
-            // Modal elements
-            const blogModal = document.getElementById('blog-modal');
-            const modalCloseButton = document.querySelector('.modal-close-button');
-            const modalBlogTitle = document.getElementById('modal-blog-title');
-            const modalBlogAuthor = document.getElementById('modal-blog-author');
-            const modalBlogDate = document.getElementById('modal-blog-date');
-            const modalBlogContent = document.getElementById('modal-blog-content');
-
-            // Function to render blog posts
-            function renderBlogs() {
-                blogsList.innerHTML = ''; // Clear existing content
-                blogsData.forEach(blog => {
-                    const blogCard = document.createElement('div');
-                    blogCard.className = 'card';
-                    blogCard.innerHTML = `
-                        <img src="${blog.image}" alt="${blog.title}" class="card-img">
-                        <div class="card-content">
-                            <h3>${blog.title}</h3>
-                            <p>${blog.excerpt}</p>
-                        </div>
-                        <div class="card-footer">
-                            <span>${blog.date} by ${blog.author}</span>
-                            <a href="#" class="read-more-btn" data-blog-id="${blog.id}">Read More &raquo;</a>
-                        </div>
-                    `;
-                    blogsList.appendChild(blogCard);
-                });
-
-                // Add event listeners for "Read More" buttons
-                document.querySelectorAll('.read-more-btn').forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        event.preventDefault(); // Prevent default link behavior
-                        const blogId = event.target.dataset.blogId;
-                        const blog = blogsData.find(b => b.id === blogId);
-                        if (blog) {
-                            modalBlogTitle.textContent = blog.title;
-                            modalBlogAuthor.textContent = blog.author;
-                            modalBlogDate.textContent = blog.date;
-                            modalBlogContent.textContent = blog.excerpt; // Display excerpt as full content for this demo
-                            blogModal.style.display = 'flex'; // Show modal
-                        }
-                    });
-                });
+        // Save API key
+        function saveApiKey() {
+            const input = document.getElementById('apiKeyInput');
+            if (input && input.value) {
+                apiKey = input.value.trim();
+                localStorage.setItem('alphaVantageApiKey', apiKey);
+                initializeDashboard();
             }
+        }
 
-            // Function to render medical reports
-            function renderReports() {
-                reportsList.innerHTML = ''; // Clear existing content
-                reportsData.forEach(report => {
-                    const reportCard = document.createElement('div');
-                    reportCard.className = 'card';
-                    reportCard.innerHTML = `
-                        <div class="card-content">
-                            <h3>${report.title}</h3>
-                            <p>${report.summary}</p>
-                        </div>
-                        <div class="card-footer">
-                            <span>${report.date} from ${report.source}</span>
-                            <a href="${report.source_url}" target="_blank" rel="noopener noreferrer">View Report &raquo;</a>
-                        </div>
-                    `;
-                    reportsList.appendChild(reportCard);
-                });
-            }
-
-            // Initial rendering of content
-            renderBlogs();
-            renderReports();
-
-            // Close modal functionality
-            modalCloseButton.addEventListener('click', () => {
-                blogModal.style.display = 'none';
-            });
-
-            // Close modal if clicked outside of content
-            window.addEventListener('click', (event) => {
-                if (event.target === blogModal) {
-                    blogModal.style.display = 'none';
+        // Fetch real market data
+        async function fetchMarketData(symbol) {
+            try {
+                const response = await fetch(`${API_BASE_URL}?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`);
+                const data = await response.json();
+                
+                if (data['Global Quote'] && data['Global Quote']['05. price']) {
+                    const quote = data['Global Quote'];
+                    return {
+                        price: parseFloat(quote['05. price']),
+                        change: parseFloat(quote['09. change']),
+                        changePercent: parseFloat(quote['10. change percent'].replace('%', ''))
+                    };
+                } else if (data['Error Message']) {
+                    throw new Error(data['Error Message']);
+                } else {
+                    throw new Error('Invalid API response');
                 }
-            });
+            } catch (error) {
+                console.error('Error fetching market data:', error);
+                throw error;
+            }
+        }
 
-            // Instant scrolling for navigation links
-            document.querySelectorAll('nav ul li a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault(); // Prevent default jump behavior
+        // Fetch historical data
+        async function fetchHistoricalData(symbol, period = '1W') {
+            try {
+                let interval = '60min';
+                let outputsize = '24';
+                
+                if (period === '1D') {
+                    interval = '5min';
+                    outputsize = '78';
+                } else if (period === '1W') {
+                    interval = '60min';
+                    outputsize = '168';
+                } else if (period === '1M') {
+                    interval = 'daily';
+                    outputsize = '30';
+                } else if (period === '3M') {
+                    interval = 'daily';
+                    outputsize = '90';
+                } else if (period === '1Y') {
+                    interval = 'daily';
+                    outputsize = '365';
+                }
+                
+                const response = await fetch(`${API_BASE_URL}?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=${interval}&outputsize=${outputsize}&apikey=${apiKey}`);
+                const data = await response.json();
+                
+                if (data[`Time Series (${interval})`]) {
+                    const timeSeries = data[`Time Series (${interval})`];
+                    const history = [];
+                    
+                    Object.keys(timeSeries).slice(0, 50).reverse().forEach(time => {
+                        history.push(parseFloat(timeSeries[time]['4. close']));
+                    });
+                    
+                    return history;
+                } else {
+                    throw new Error('No historical data available');
+                }
+            } catch (error) {
+                console.error('Error fetching historical data:', error);
+                return [];
+            }
+        }
 
-                    const targetId = this.getAttribute('href'); // e.g., "#blogs-section"
-                    const targetElement = document.querySelector(targetId); // The section element
-
-                    if (targetElement) {
-                        // Calculate offset for sticky header
-                        const headerOffset = document.querySelector('header').offsetHeight;
-                        const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                        const offsetPosition = elementPosition - headerOffset;
-
-                        // Perform instant scroll
-                        window.scrollTo(0, offsetPosition);
+        // Update markets with real data
+        async function updateMarkets() {
+            if (!checkApiKey()) return;
+            
+            try {
+                const promises = markets.map(async (market) => {
+                    try {
+                        const data = await fetchMarketData(market.symbol);
+                        marketData[market.id] = {
+                            ...marketData[market.id],
+                            currentValue: data.price,
+                            change: data.change,
+                            changePercent: data.changePercent,
+                            lastUpdated: new Date()
+                        };
+                        
+                        // Fetch historical data
+                        const history = await fetchHistoricalData(market.symbol);
+                        if (history.length > 0) {
+                            marketData[market.id].history = history;
+                        }
+                    } catch (error) {
+                        console.error(`Error updating ${market.name}:`, error);
                     }
                 });
+                
+                await Promise.all(promises);
+                
+                renderMarketCards();
+                updateMainChart();
+                updateStats();
+                updateLastUpdateTime();
+                hideError();
+            } catch (error) {
+                showError('Failed to fetch market data. Please check your API key.');
+            }
+        }
+
+        // Render market cards
+        function renderMarketCards() {
+            const grid = document.getElementById('marketsGrid');
+            grid.innerHTML = '';
+            
+            markets.forEach(market => {
+                const data = marketData[market.id];
+                const isPositive = data.change >= 0;
+                
+                const card = document.createElement('div');
+                card.className = 'market-card';
+                card.innerHTML = `
+                    <div class="market-header">
+                        <div class="market-name">
+                            <div class="market-icon">
+                                <i class="fas ${market.icon}"></i>
+                            </div>
+                            <span>${market.name}</span>
+                        </div>
+                    </div>
+                    <div class="market-value">${formatNumber(data.currentValue)}</div>
+                    <div class="market-change ${isPositive ? 'positive' : 'negative'}">
+                        <i class="fas fa-arrow-${isPositive ? 'up' : 'down'}"></i>
+                        <span>${Math.abs(data.changePercent).toFixed(2)}%</span>
+                        <span>(${formatNumber(Math.abs(data.change))})</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chart-${market.id}"></canvas>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+                
+                // Create mini chart
+                setTimeout(() => {
+                    if (data.history.length > 0) {
+                        createMiniChart(market.id, data.history, isPositive);
+                    }
+                }, 100);
+            });
+        }
+
+        // Create mini chart for each market
+        function createMiniChart(marketId, history, isPositive) {
+            const ctx = document.getElementById(`chart-${marketId}`);
+            if (!ctx) return;
+            
+            const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 150);
+            gradient.addColorStop(0, isPositive ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)');
+            gradient.addColorStop(1, 'rgba(74, 222, 128, 0)');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(history.length).fill(''),
+                    datasets: [{
+                        data: history,
+                        borderColor: isPositive ? '#4ade80' : '#f87171',
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Main chart
+        let mainChart;
+        function createMainChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            const datasets = markets.map((market, index) => {
+                const data = marketData[market.id];
+                const colors = [
+                    '#4ade80', '#22d3ee', '#a78bfa', '#f59e0b', '#ef4444', '#ec4899'
+                ];
+                
+                return {
+                    label: market.name,
+                    data: data.history,
+                    borderColor: colors[index],
+                    backgroundColor: colors[index] + '20',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 5
+                };
+            });
+            
+            mainChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(50).fill('').map((_, i) => `${i}`),
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#fff',
+                                padding: 20,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                borderColor: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                maxRotation: 0
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                borderColor: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(value) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update main chart
+        function updateMainChart() {
+            if (!mainChart) return;
+            
+            mainChart.data.datasets.forEach((dataset, index) => {
+                dataset.data = marketData[markets[index].id].history;
+            });
+            
+            mainChart.update('none');
+        }
+
+        // Update statistics
+        function updateStats() {
+            let totalVolume = 0;
+            let totalChange = 0;
+            let validMarkets = 0;
+            
+            markets.forEach(market => {
+                const data = marketData[market.id];
+                if (data.currentValue > 0) {
+                    totalVolume += data.currentValue * 1000; // Simulated volume
+                    totalChange += data.changePercent;
+                    validMarkets++;
+                }
+            });
+            
+            document.getElementById('totalVolume').textContent = formatNumber(totalVolume);
+            document.getElementById('marketCap').textContent = formatNumber(totalVolume * 10);
+            document.getElementById('activeMarkets').textContent = validMarkets;
+            document.getElementById('avgChange').textContent = (totalChange / validMarkets || 0).toFixed(2) + '%';
+            
+            // Color code average change
+            const avgChangeElement = document.getElementById('avgChange');
+            avgChangeElement.className = totalChange >= 0 ? 'stat-value positive' : 'stat-value negative';
+        }
+
+        // Format numbers
+        function formatNumber(num) {
+            if (num >= 1e9) {
+                return '$' + (num / 1e9).toFixed(2) + 'B';
+            } else if (num >= 1e6) {
+                return '$' + (num / 1e6).toFixed(2) + 'M';
+            } else if (num >= 1e3) {
+                return '$' + (num / 1e3).toFixed(2) + 'K';
+            }
+            return '$' + num.toFixed(2);
+        }
+
+        // Update last update time
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = `Last update: ${timeString}`;
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Hide error message
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Time filter buttons
+        document.querySelectorAll('.time-filter').forEach(button => {
+            button.addEventListener('click', async function() {
+                document.querySelectorAll('.time-filter').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const period = this.dataset.period;
+                
+                // Fetch new historical data for all markets
+                const promises = markets.map(async (market) => {
+                    try {
+                        const history = await fetchHistoricalData(market.symbol, period);
+                        if (history.length > 0) {
+                            marketData[market.id].history = history;
+                        }
+                    } catch (error) {
+                        console.error(`Error fetching historical data for ${market.name}:`, error);
+                    }
+                });
+                
+                await Promise.all(promises);
+                
+                renderMarketCards();
+                updateMainChart();
             });
         });
+
+        // Initialize dashboard
+        async function initializeDashboard() {
+            if (checkApiKey()) {
+                await updateMarkets();
+                createMainChart();
+            }
+        }
+
+        // Start the dashboard
+        initializeDashboard();
+
+        // Auto-update every 30 seconds (respecting API rate limits)
+        setInterval(updateMarkets, 30000);
     </script>
 </body>
 </html>
