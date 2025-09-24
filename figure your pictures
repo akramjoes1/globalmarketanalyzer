@@ -3,471 +3,876 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Figure Your Pictures</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>AKRAM JOES GLOBAL MARKET ANALYZER</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f0f4f8;
-            background-image: linear-gradient(135deg, #a7cbf5 0%, #d4a5ef 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            background-color: #ffffff;
-            border-radius: 2rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-            padding: 3rem;
-            margin: 2rem;
-            animation: fadeIn 1s ease-in-out;
+
+        header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .ad-container {
-            min-height: 100px;
-            background-color: #f1f5f9;
-            display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            border-radius: 1rem;
-            margin: 2rem 0;
-            color: #64748b;
-            text-align: center;
-            border: 2px dashed #e2e8f0;
         }
-        .btn-gradient {
-            background-image: linear-gradient(to right, #6366f1, #8b5cf6, #d946ef);
-            transition: all 0.3s ease-in-out;
-            border: none;
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
-        .btn-gradient:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+
+        .logo i {
+            font-size: 2rem;
+            color: #4ade80;
         }
-        .btn-gradient:active {
-            transform: scale(0.98);
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #4ade80, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .download-btn {
-            background-image: linear-gradient(to right, #22c55e, #16a34a);
+
+        .last-update {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
         }
-        .download-btn:hover {
-            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.4);
+
+        .pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
         }
-        .upload-box-hover:hover {
-            animation: pulse 1.5s infinite;
-        }
+
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+            }
         }
-        #three-canvas {
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            background: #282c34;
+
+        main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .markets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .market-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .market-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4ade80, #22d3ee);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .market-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .market-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .market-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .market-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .market-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .market-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .market-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .positive {
+            color: #4ade80;
+        }
+
+        .negative {
+            color: #f87171;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 150px;
+            margin-top: 1rem;
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .overview-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .time-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .time-filter {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .time-filter:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .time-filter.active {
+            background: linear-gradient(45deg, #4ade80, #22d3ee);
+            border-color: transparent;
+        }
+
+        .main-chart-container {
+            position: relative;
+            height: 400px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #4ade80;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .api-key-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #fff;
+            margin-right: 0.5rem;
+            width: 200px;
+        }
+
+        .api-key-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .save-key-btn {
+            background: linear-gradient(45deg, #4ade80, #22d3ee);
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .save-key-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .error-message {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #f87171;
+            text-align: center;
+        }
+
+        .brand-highlight {
+            background: linear-gradient(45deg, #4ade80, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .markets-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .time-filters {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .api-key-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .api-key-input {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="flex flex-col items-center">
-            <div class="flex items-center mb-6">
-                <svg class="w-16 h-16 text-indigo-600 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                <h1 class="text-6xl font-extrabold text-gray-900 text-center">Figure Your Pictures</h1>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <h1>AKRAM JOES GLOBAL MARKET ANALYZER</h1>
             </div>
-            <p class="text-gray-600 text-center mb-12 text-lg font-medium">Turn your photos into personalized figurines with the power of AI.</p>
-        </header>
-
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="space-y-6">
-                <div class="bg-indigo-50 border-2 border-dashed border-indigo-200 rounded-3xl p-10 flex flex-col items-center justify-center cursor-pointer transition-colors duration-200 upload-box-hover" id="upload-box">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                    </svg>
-                    <span class="mt-4 text-indigo-700 font-semibold text-xl">Click to upload your picture</span>
-                    <input type="file" id="image-upload" accept="image/*" class="hidden">
-                </div>
-                
-                <textarea id="prompt-input" rows="5" class="w-full p-6 border-2 border-gray-300 rounded-3xl focus:ring-4 focus:ring-purple-300 focus:border-purple-500 transition-all duration-200 resize-none placeholder-gray-400" placeholder="Describe the figurine features here..."></textarea>
-
-                <div class="flex items-center space-x-4">
-                    <label for="figurine-material" class="text-gray-700 font-semibold">Material:</label>
-                    <select id="figurine-material" class="flex-1 p-3 border-2 border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-300 focus:border-purple-500 transition-all duration-200">
-                        <option value="vinyl">Vinyl</option>
-                        <option value="porcelain">Porcelain</option>
-                        <option value="metal">Metal</option>
-                    </select>
-                </div>
-                
-                <button id="generate-btn" class="w-full text-white font-bold py-5 px-8 rounded-3xl shadow-lg btn-gradient">
-                    Generate Figurine
-                </button>
+            <div class="last-update">
+                <span class="pulse"></span>
+                <span id="lastUpdate">Initializing...</span>
             </div>
+        </div>
+    </header>
 
-            <div class="flex flex-col items-center justify-center">
-                <!-- AdSense Placeholder 1 -->
-                <div class="ad-container w-full max-w-lg mb-8">
-                    <p>Figurine Showcase Ad</p>
-                </div>
-                
-                <div id="loading" class="hidden text-purple-600 font-semibold text-lg flex items-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>Generating your figurine...</span>
-                </div>
-                
-                <div id="result-container" class="hidden w-full h-96 flex flex-col items-center">
-                    <canvas id="three-canvas" class="w-full h-full"></canvas>
-                    <button id="download-btn" class="w-full mt-4 text-white font-bold py-5 px-8 rounded-3xl shadow-lg btn-gradient download-btn">
-                        Download Image
-                    </button>
-                </div>
-            </div>
-        </main>
+    <main>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
         
-        <section id="gallery-section" class="mt-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Community Gallery</h2>
-            <div id="figurine-gallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                <p class="text-center text-gray-500 col-span-full">Loading gallery...</p>
-            </div>
-        </section>
-
-        <!-- AdSense Placeholder 2 -->
-        <div class="ad-container w-full max-w-lg mt-12 self-center">
-            <p>AI Art Inspiration Ad</p>
+        <div class="markets-grid" id="marketsGrid">
+            <!-- Market cards will be dynamically generated -->
         </div>
 
-    </div>
-
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Three.js and OrbitControls
-        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-        import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/controls/OrbitControls.js';
-
-        // Set global variables from the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        let userId = null;
-
-        // API configuration
-        const apiKey = ""; 
-        const modelName = "gemini-2.5-flash-image-preview";
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-
-        // UI Elements
-        const uploadInput = document.getElementById('image-upload');
-        const uploadBox = document.getElementById('upload-box');
-        const promptInput = document.getElementById('prompt-input');
-        const generateBtn = document.getElementById('generate-btn');
-        const loadingDiv = document.getElementById('loading');
-        const resultContainer = document.getElementById('result-container');
-        const threeCanvas = document.getElementById('three-canvas');
-        const downloadBtn = document.getElementById('download-btn');
-        const figurineGallery = document.getElementById('figurine-gallery');
-        let uploadedImageData = null;
-
-        // Three.js variables
-        let scene, camera, renderer, controls;
-        let figurineMesh;
-
-        // Default prompt
-        promptInput.value = "Create a 1/7 scale commercialized figurine of the characters in the picture, in a realistic style, in a real environment. The figurine is placed on a computer desk. The figurine has a round transparent acrylic base, with no text on the base. The content on the computer screen is a 3D modeling process of this figurine. Next to the computer screen is a toy packaging box, designed in a style reminiscent of high-quality collectible figures, printed with original artwork. The packaging features two-dimensional flat illustrations.";
-
-        // Initialize Firebase Authentication
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                console.log("Firebase Auth Ready. User ID:", userId);
-                setupThreeJS();
-                loadFigurines();
-            } else {
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            }
-        });
-
-        // Initialize Three.js scene
-        function setupThreeJS() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, threeCanvas.offsetWidth / threeCanvas.offsetHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, antialias: true, alpha: true });
-            renderer.setSize(threeCanvas.offsetWidth, threeCanvas.offsetHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
+        <div class="overview-section">
+            <div class="overview-header">
+                <h2 class="overview-title">Global Market Overview</h2>
+                <div class="time-filters">
+                    <button class="time-filter" data-period="1D">1D</button>
+                    <button class="time-filter active" data-period="1W">1W</button>
+                    <button class="time-filter" data-period="1M">1M</button>
+                    <button class="time-filter" data-period="3M">3M</button>
+                    <button class="time-filter" data-period="1Y">1Y</button>
+                </div>
+            </div>
             
-            // Add lights
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-            const pointLight = new THREE.PointLight(0xffffff, 1);
-            pointLight.position.set(5, 5, 5);
-            scene.add(pointLight);
+            <div class="main-chart-container">
+                <canvas id="mainChart"></canvas>
+            </div>
 
-            // Create a simple plane for the figurine
-            const geometry = new THREE.PlaneGeometry(3, 3);
-            const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, side: THREE.DoubleSide });
-            figurineMesh = new THREE.Mesh(geometry, material);
-            scene.add(figurineMesh);
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Volume</div>
+                    <div class="stat-value" id="totalVolume">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Market Cap</div>
+                    <div class="stat-value" id="marketCap">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Markets</div>
+                    <div class="stat-value" id="activeMarkets">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg. Change</div>
+                    <div class="stat-value" id="avgChange">0%</div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-            camera.position.z = 5;
+    <script>
+        // Market data structure with real symbols
+        const markets = [
+            { id: 'sp500', name: 'S&P 500', symbol: 'SPY', icon: 'fa-chart-bar' },
+            { id: 'nasdaq', name: 'NASDAQ', symbol: 'QQQ', icon: 'fa-microchip' },
+            { id: 'dow', name: 'Dow Jones', symbol: 'DIA', icon: 'fa-industry' },
+            { id: 'nyse', name: 'NYSE', symbol: 'NYA', icon: 'fa-building' },
+            { id: 'ftse', name: 'FTSE 100', symbol: 'UKX', icon: 'fa-crown' },
+            { id: 'nikkei', name: 'Nikkei 225', symbol: 'NKY', icon: 'fa-yen-sign' }
+        ];
 
-            // Add OrbitControls for user interaction
-            controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.screenSpacePanning = false;
-            controls.maxPolarAngle = Math.PI / 2;
-
-            window.addEventListener('resize', onWindowResize, false);
-            animate();
-        }
-
-        function onWindowResize() {
-            camera.aspect = threeCanvas.offsetWidth / threeCanvas.offsetHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(threeCanvas.offsetWidth, threeCanvas.offsetHeight);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-
-        // Load figurine from a data URI onto the 3D model
-        function loadFigurineTo3D(dataUri) {
-            const textureLoader = new THREE.TextureLoader();
-            textureLoader.load(dataUri, (texture) => {
-                const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
-                figurineMesh.material = material;
-            });
-        }
-
-        // Save figurine data to Firestore
-        async function saveFigurine(imageData, userPrompt) {
-            if (!userId) {
-                console.error("User not authenticated. Cannot save.");
-                return;
-            }
-            try {
-                const figurinesCollection = collection(db, `/artifacts/${appId}/public/data/figurines`);
-                await addDoc(figurinesCollection, {
-                    prompt: userPrompt,
-                    imageData: imageData,
-                    createdAt: new Date(),
-                    userId: userId
-                });
-            } catch (error) {
-                console.error("Error saving figurine to Firestore:", error);
-            }
-        }
-
-        // Load figurines from Firestore and update the gallery
-        function loadFigurines() {
-            const figurinesCollection = collection(db, `/artifacts/${appId}/public/data/figurines`);
-            const q = query(figurinesCollection);
-            
-            onSnapshot(q, (snapshot) => {
-                const figurines = [];
-                snapshot.forEach(doc => {
-                    figurines.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // Sort by creation time, newest first
-                figurines.sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate());
-
-                figurineGallery.innerHTML = '';
-                if (figurines.length === 0) {
-                    figurineGallery.innerHTML = '<p class="text-center text-gray-500 col-span-full">No figurines in the gallery yet. Be the first to create one!</p>';
-                } else {
-                    figurines.forEach(figurine => {
-                        const img = document.createElement('img');
-                        img.src = `data:image/jpeg;base64,${figurine.imageData}`;
-                        img.alt = figurine.prompt;
-                        img.className = 'w-full h-auto rounded-xl shadow-lg cursor-pointer transition-transform duration-200 hover:scale-105';
-                        img.onclick = () => {
-                            loadFigurineTo3D(img.src);
-                            resultContainer.classList.remove('hidden');
-                        };
-                        figurineGallery.appendChild(img);
-                    });
-                }
-            });
-        }
-
-        // Event listener for the image upload box
-        uploadBox.addEventListener('click', () => uploadInput.click());
-
-        // Event listener for the file input change
-        uploadInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    uploadedImageData = e.target.result.split(',')[1];
-                    uploadBox.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-2xl shadow-inner"/>`;
-                    uploadBox.classList.remove('p-10', 'flex-col');
-                    uploadBox.classList.add('h-64');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Event listener for the generate button
-        generateBtn.addEventListener('click', async () => {
-            if (!uploadedImageData) {
-                showCustomMessage("Please upload an image first.");
-                return;
-            }
-
-            resultContainer.classList.add('hidden');
-            loadingDiv.classList.remove('hidden');
-            generateBtn.disabled = true;
-
-            const userPrompt = `${promptInput.value}. Material is ${document.getElementById('figurine-material').value}.`;
-
-            const payload = {
-                contents: [
-                    {
-                        parts: [
-                            { text: userPrompt },
-                            {
-                                inlineData: {
-                                    mimeType: "image/jpeg",
-                                    data: uploadedImageData
-                                }
-                            }
-                        ]
-                    }
-                ],
-                generationConfig: {
-                    responseModalities: ["TEXT", "IMAGE"],
-                },
+        // Initialize market data
+        const marketData = {};
+        markets.forEach(market => {
+            marketData[market.id] = {
+                ...market,
+                currentValue: 0,
+                change: 0,
+                changePercent: 0,
+                history: [],
+                lastUpdated: null
             };
-
-            try {
-                let response = null;
-                let retries = 0;
-                const maxRetries = 5;
-                const baseDelay = 1000;
-
-                while (retries < maxRetries) {
-                    try {
-                        response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-                        if (response.status !== 429) {
-                            break;
-                        }
-                    } catch (error) {
-                        console.error('Fetch attempt failed:', error);
-                    }
-                    retries++;
-                    await new Promise(res => setTimeout(res, baseDelay * Math.pow(2, retries)));
-                }
-
-                if (!response || !response.ok) {
-                    throw new Error(`HTTP error! status: ${response ? response.status : 'unknown'}`);
-                }
-
-                const result = await response.json();
-                const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
-
-                if (part && part.inlineData && part.inlineData.data) {
-                    const base64Data = part.inlineData.data;
-                    const mimeType = part.inlineData.mimeType || 'image/png';
-                    const dataUri = `data:${mimeType};base64,${base64Data}`;
-                    
-                    loadFigurineTo3D(dataUri);
-                    resultContainer.classList.remove('hidden');
-                    
-                    downloadBtn.onclick = () => {
-                        const a = document.createElement('a');
-                        a.href = dataUri;
-                        a.download = 'figurine.png';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    };
-
-                    await saveFigurine(base64Data, userPrompt);
-                } else {
-                    console.error("No image data found in the API response.");
-                    showCustomMessage("Oops! Something went wrong. The AI may not have been able to generate an image. Please try again.");
-                }
-            } catch (error) {
-                console.error('Failed to generate figurine:', error);
-                showCustomMessage("Oops! Something went wrong. Please try again.");
-            } finally {
-                loadingDiv.classList.add('hidden');
-                generateBtn.disabled = false;
-            }
         });
 
-        // Function to show a custom message box
-        function showCustomMessage(message) {
-            const messageBox = document.createElement('div');
-            messageBox.className = 'fixed inset-0 z-50 bg-gray-600 bg-opacity-50 flex items-center justify-center';
-            messageBox.innerHTML = `
-                <div class="bg-white p-8 rounded-2xl shadow-xl text-center">
-                    <p class="text-xl font-semibold mb-4 text-gray-800">${message}</p>
-                    <button onclick="this.parentNode.parentNode.remove()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-xl transition-colors duration-200">OK</button>
+        // API Configuration
+        let apiKey = localStorage.getItem('alphaVantageApiKey') || '';
+        const API_BASE_URL = 'https://www.alphavantage.co/query';
+
+        // Check for API key
+        function checkApiKey() {
+            if (!apiKey) {
+                showApiKeyPrompt();
+                return false;
+            }
+            return true;
+        }
+
+        // Show API key prompt
+        function showApiKeyPrompt() {
+            const grid = document.getElementById('marketsGrid');
+            grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                    <h3 style="margin-bottom: 1rem;">API Key Required</h3>
+                    <p style="margin-bottom: 1.5rem; color: #94a3b8;">
+                        <span class="brand-highlight">AKRAM JOES GLOBAL MARKET ANALYZER</span> requires a free Alpha Vantage API key to display real market data.
+                    </p>
+                    <div class="api-key-section" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <input type="text" 
+                               class="api-key-input" 
+                               id="apiKeyInput" 
+                               placeholder="Enter your API key"
+                               maxlength="20">
+                        <button class="save-key-btn" onclick="saveApiKey()">Save Key</button>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
+                        Get your free API key at: <a href="https://www.alphavantage.co/support/#api-key" target="_blank" style="color: #4ade80;">alphavantage.co</a>
+                    </p>
                 </div>
             `;
-            document.body.appendChild(messageBox);
         }
-    </script>
 
-    <!-- To enable AdSense, uncomment the script below and replace the values -->
-    <!--
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1234567890" crossorigin="anonymous"></script>
-    <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-1234567890"
-        data-ad-slot="1234567890"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        // Save API key
+        function saveApiKey() {
+            const input = document.getElementById('apiKeyInput');
+            if (input && input.value) {
+                apiKey = input.value.trim();
+                localStorage.setItem('alphaVantageApiKey', apiKey);
+                initializeDashboard();
+            }
+        }
+
+        // Fetch real market data
+        async function fetchMarketData(symbol) {
+            try {
+                const response = await fetch(`${API_BASE_URL}?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`);
+                const data = await response.json();
+                
+                if (data['Global Quote'] && data['Global Quote']['05. price']) {
+                    const quote = data['Global Quote'];
+                    return {
+                        price: parseFloat(quote['05. price']),
+                        change: parseFloat(quote['09. change']),
+                        changePercent: parseFloat(quote['10. change percent'].replace('%', ''))
+                    };
+                } else if (data['Error Message']) {
+                    throw new Error(data['Error Message']);
+                } else {
+                    throw new Error('Invalid API response');
+                }
+            } catch (error) {
+                console.error('Error fetching market data:', error);
+                throw error;
+            }
+        }
+
+        // Fetch historical data
+        async function fetchHistoricalData(symbol, period = '1W') {
+            try {
+                let interval = '60min';
+                let outputsize = '24';
+                
+                if (period === '1D') {
+                    interval = '5min';
+                    outputsize = '78';
+                } else if (period === '1W') {
+                    interval = '60min';
+                    outputsize = '168';
+                } else if (period === '1M') {
+                    interval = 'daily';
+                    outputsize = '30';
+                } else if (period === '3M') {
+                    interval = 'daily';
+                    outputsize = '90';
+                } else if (period === '1Y') {
+                    interval = 'daily';
+                    outputsize = '365';
+                }
+                
+                const response = await fetch(`${API_BASE_URL}?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=${interval}&outputsize=${outputsize}&apikey=${apiKey}`);
+                const data = await response.json();
+                
+                if (data[`Time Series (${interval})`]) {
+                    const timeSeries = data[`Time Series (${interval})`];
+                    const history = [];
+                    
+                    Object.keys(timeSeries).slice(0, 50).reverse().forEach(time => {
+                        history.push(parseFloat(timeSeries[time]['4. close']));
+                    });
+                    
+                    return history;
+                } else {
+                    throw new Error('No historical data available');
+                }
+            } catch (error) {
+                console.error('Error fetching historical data:', error);
+                return [];
+            }
+        }
+
+        // Update markets with real data
+        async function updateMarkets() {
+            if (!checkApiKey()) return;
+            
+            try {
+                const promises = markets.map(async (market) => {
+                    try {
+                        const data = await fetchMarketData(market.symbol);
+                        marketData[market.id] = {
+                            ...marketData[market.id],
+                            currentValue: data.price,
+                            change: data.change,
+                            changePercent: data.changePercent,
+                            lastUpdated: new Date()
+                        };
+                        
+                        // Fetch historical data
+                        const history = await fetchHistoricalData(market.symbol);
+                        if (history.length > 0) {
+                            marketData[market.id].history = history;
+                        }
+                    } catch (error) {
+                        console.error(`Error updating ${market.name}:`, error);
+                    }
+                });
+                
+                await Promise.all(promises);
+                
+                renderMarketCards();
+                updateMainChart();
+                updateStats();
+                updateLastUpdateTime();
+                hideError();
+            } catch (error) {
+                showError('Failed to fetch market data. Please check your API key.');
+            }
+        }
+
+        // Render market cards
+        function renderMarketCards() {
+            const grid = document.getElementById('marketsGrid');
+            grid.innerHTML = '';
+            
+            markets.forEach(market => {
+                const data = marketData[market.id];
+                const isPositive = data.change >= 0;
+                
+                const card = document.createElement('div');
+                card.className = 'market-card';
+                card.innerHTML = `
+                    <div class="market-header">
+                        <div class="market-name">
+                            <div class="market-icon">
+                                <i class="fas ${market.icon}"></i>
+                            </div>
+                            <span>${market.name}</span>
+                        </div>
+                    </div>
+                    <div class="market-value">${formatNumber(data.currentValue)}</div>
+                    <div class="market-change ${isPositive ? 'positive' : 'negative'}">
+                        <i class="fas fa-arrow-${isPositive ? 'up' : 'down'}"></i>
+                        <span>${Math.abs(data.changePercent).toFixed(2)}%</span>
+                        <span>(${formatNumber(Math.abs(data.change))})</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chart-${market.id}"></canvas>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+                
+                // Create mini chart
+                setTimeout(() => {
+                    if (data.history.length > 0) {
+                        createMiniChart(market.id, data.history, isPositive);
+                    }
+                }, 100);
+            });
+        }
+
+        // Create mini chart for each market
+        function createMiniChart(marketId, history, isPositive) {
+            const ctx = document.getElementById(`chart-${marketId}`);
+            if (!ctx) return;
+            
+            const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 150);
+            gradient.addColorStop(0, isPositive ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)');
+            gradient.addColorStop(1, 'rgba(74, 222, 128, 0)');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(history.length).fill(''),
+                    datasets: [{
+                        data: history,
+                        borderColor: isPositive ? '#4ade80' : '#f87171',
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Main chart
+        let mainChart;
+        function createMainChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            const datasets = markets.map((market, index) => {
+                const data = marketData[market.id];
+                const colors = [
+                    '#4ade80', '#22d3ee', '#a78bfa', '#f59e0b', '#ef4444', '#ec4899'
+                ];
+                
+                return {
+                    label: market.name,
+                    data: data.history,
+                    borderColor: colors[index],
+                    backgroundColor: colors[index] + '20',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 5
+                };
+            });
+            
+            mainChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(50).fill('').map((_, i) => `${i}`),
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#fff',
+                                padding: 20,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                borderColor: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                maxRotation: 0
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                borderColor: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(value) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update main chart
+        function updateMainChart() {
+            if (!mainChart) return;
+            
+            mainChart.data.datasets.forEach((dataset, index) => {
+                dataset.data = marketData[markets[index].id].history;
+            });
+            
+            mainChart.update('none');
+        }
+
+        // Update statistics
+        function updateStats() {
+            let totalVolume = 0;
+            let totalChange = 0;
+            let validMarkets = 0;
+            
+            markets.forEach(market => {
+                const data = marketData[market.id];
+                if (data.currentValue > 0) {
+                    totalVolume += data.currentValue * 1000; // Simulated volume
+                    totalChange += data.changePercent;
+                    validMarkets++;
+                }
+            });
+            
+            document.getElementById('totalVolume').textContent = formatNumber(totalVolume);
+            document.getElementById('marketCap').textContent = formatNumber(totalVolume * 10);
+            document.getElementById('activeMarkets').textContent = validMarkets;
+            document.getElementById('avgChange').textContent = (totalChange / validMarkets || 0).toFixed(2) + '%';
+            
+            // Color code average change
+            const avgChangeElement = document.getElementById('avgChange');
+            avgChangeElement.className = totalChange >= 0 ? 'stat-value positive' : 'stat-value negative';
+        }
+
+        // Format numbers
+        function formatNumber(num) {
+            if (num >= 1e9) {
+                return '$' + (num / 1e9).toFixed(2) + 'B';
+            } else if (num >= 1e6) {
+                return '$' + (num / 1e6).toFixed(2) + 'M';
+            } else if (num >= 1e3) {
+                return '$' + (num / 1e3).toFixed(2) + 'K';
+            }
+            return '$' + num.toFixed(2);
+        }
+
+        // Update last update time
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = `Last update: ${timeString}`;
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Hide error message
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Time filter buttons
+        document.querySelectorAll('.time-filter').forEach(button => {
+            button.addEventListener('click', async function() {
+                document.querySelectorAll('.time-filter').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const period = this.dataset.period;
+                
+                // Fetch new historical data for all markets
+                const promises = markets.map(async (market) => {
+                    try {
+                        const history = await fetchHistoricalData(market.symbol, period);
+                        if (history.length > 0) {
+                            marketData[market.id].history = history;
+                        }
+                    } catch (error) {
+                        console.error(`Error fetching historical data for ${market.name}:`, error);
+                    }
+                });
+                
+                await Promise.all(promises);
+                
+                renderMarketCards();
+                updateMainChart();
+            });
+        });
+
+        // Initialize dashboard
+        async function initializeDashboard() {
+            if (checkApiKey()) {
+                await updateMarkets();
+                createMainChart();
+            }
+        }
+
+        // Start the dashboard
+        initializeDashboard();
+
+        // Auto-update every 30 seconds (respecting API rate limits)
+        setInterval(updateMarkets, 30000);
     </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1234567890" crossorigin="anonymous"></script>
-    <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-1234567890"
-        data-ad-slot="9876543210"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    -->
 </body>
 </html>
