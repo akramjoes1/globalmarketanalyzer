@@ -21,6 +21,102 @@
             overflow-x: hidden;
         }
 
+        /* Ticker Styles */
+        .ticker-container {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 0;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ticker {
+            display: flex;
+            animation: scroll 30s linear infinite;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        .ticker-item i {
+            margin-right: 0.5rem;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Ad Slot Styles */
+        .ad-slot {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            color: #94a3b8;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ad-slot::before {
+            content: 'ADVERTISEMENT';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.7rem;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .ad-slot.leaderboard {
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-slot.sidebar {
+            width: 300px;
+            height: 250px;
+            position: sticky;
+            top: 120px;
+        }
+
+        .ad-slot.in-content {
+            height: 250px;
+        }
+
+        .ad-slot.footer {
+            height: 90px;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
         header {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -87,17 +183,11 @@
             }
         }
 
-        main {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-
         .markets-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
 
         .market-card {
@@ -132,6 +222,15 @@
             transform: translateX(0);
         }
 
+        .market-card.updating {
+            animation: updateFlash 0.5s ease;
+        }
+
+        @keyframes updateFlash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
         .market-header {
             display: flex;
             justify-content: space-between;
@@ -161,6 +260,7 @@
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
         }
 
         .market-change {
@@ -249,6 +349,12 @@
             border-radius: 12px;
             padding: 1.5rem;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .stat-label {
@@ -260,6 +366,7 @@
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
+            transition: all 0.3s ease;
         }
 
         .loading {
@@ -323,6 +430,61 @@
             font-weight: 700;
         }
 
+        /* Movement Indicators */
+        .movement-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: movementPulse 1s ease-in-out infinite;
+        }
+
+        .movement-indicator.up {
+            background: #4ade80;
+            box-shadow: 0 0 10px #4ade80;
+        }
+
+        .movement-indicator.down {
+            background: #f87171;
+            box-shadow: 0 0 10px #f87171;
+        }
+
+        @keyframes movementPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .market-error {
+            color: #f87171;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .demo-mode {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #4ade80;
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -353,10 +515,21 @@
                 width: 100%;
                 margin-bottom: 0.5rem;
             }
+
+            .ticker {
+                animation-duration: 20s;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Live Ticker -->
+    <div class="ticker-container">
+        <div class="ticker" id="liveTicker">
+            <!-- Ticker items will be dynamically generated -->
+        </div>
+    </div>
+
     <header>
         <div class="header-content">
             <div class="logo">
@@ -370,59 +543,109 @@
         </div>
     </header>
 
-    <main>
-        <div id="errorMessage" class="error-message" style="display: none;"></div>
-        
-        <div class="markets-grid" id="marketsGrid">
-            <!-- Market cards will be dynamically generated -->
-        </div>
+    <!-- Leaderboard Ad -->
+    <div class="ad-slot leaderboard">
+        <i class="fas fa-ad fa-2x"></i>
+        <p style="margin-top: 0.5rem;">728x90 Leaderboard Ad</p>
+    </div>
 
-        <div class="overview-section">
-            <div class="overview-header">
-                <h2 class="overview-title">Global Market Overview</h2>
-                <div class="time-filters">
-                    <button class="time-filter" data-period="1D">1D</button>
-                    <button class="time-filter active" data-period="1W">1W</button>
-                    <button class="time-filter" data-period="1M">1M</button>
-                    <button class="time-filter" data-period="3M">3M</button>
-                    <button class="time-filter" data-period="1Y">1Y</button>
-                </div>
+    <div class="main-layout">
+        <div class="content-area">
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="demoMode" class="demo-mode" style="display: none;">
+                <i class="fas fa-info-circle"></i> Running in Demo Mode with Simulated Data
             </div>
             
-            <div class="main-chart-container">
-                <canvas id="mainChart"></canvas>
+            <div class="markets-grid" id="marketsGrid">
+                <!-- Market cards will be dynamically generated -->
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Total Volume</div>
-                    <div class="stat-value" id="totalVolume">$0</div>
+            <!-- In-Content Ad -->
+            <div class="ad-slot in-content">
+                <i class="fas fa-ad fa-3x"></i>
+                <p style="margin-top: 1rem;">300x250 In-Content Ad</p>
+            </div>
+
+            <div class="overview-section">
+                <div class="overview-header">
+                    <h2 class="overview-title">Global Market Overview</h2>
+                    <div class="time-filters">
+                        <button class="time-filter" data-period="1D">1D</button>
+                        <button class="time-filter active" data-period="1W">1W</button>
+                        <button class="time-filter" data-period="1M">1M</button>
+                        <button class="time-filter" data-period="3M">3M</button>
+                        <button class="time-filter" data-period="1Y">1Y</button>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Market Cap</div>
-                    <div class="stat-value" id="marketCap">$0</div>
+                
+                <div class="main-chart-container">
+                    <canvas id="mainChart"></canvas>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Active Markets</div>
-                    <div class="stat-value" id="activeMarkets">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Avg. Change</div>
-                    <div class="stat-value" id="avgChange">0%</div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Volume</div>
+                        <div class="stat-value" id="totalVolume">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Market Cap</div>
+                        <div class="stat-value" id="marketCap">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Active Markets</div>
+                        <div class="stat-value" id="activeMarkets">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg. Change</div>
+                        <div class="stat-value" id="avgChange">0%</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+
+        <div class="sidebar">
+            <!-- Sidebar Ad -->
+            <div class="ad-slot sidebar">
+                <i class="fas fa-ad fa-3x"></i>
+                <p style="margin-top: 1rem;">300x250 Sidebar Ad</p>
+            </div>
+
+            <!-- Market News Widget -->
+            <div class="overview-section">
+                <h3 style="margin-bottom: 1rem;">Market News</h3>
+                <div style="color: #94a3b8; font-size: 0.9rem;">
+                    <div style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <strong>Fed Signals Rate Cuts</strong><br>
+                        <small>Markets rally on dovish comments</small>
+                    </div>
+                    <div style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <strong>Tech Earnings Beat</strong><br>
+                        <small>NASDAQ reaches new highs</small>
+                    </div>
+                    <div style="padding: 0.5rem 0;">
+                        <strong>Global Trade Talks</strong><br>
+                        <small>Markets await developments</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Ad -->
+    <div class="ad-slot footer">
+        <i class="fas fa-ad fa-2x"></i>
+        <p style="margin-top: 0.5rem;">728x90 Footer Ad</p>
+    </div>
 
     <script>
         // Market data structure with real symbols
         const markets = [
-            { id: 'sp500', name: 'S&P 500', symbol: 'SPY', icon: 'fa-chart-bar' },
-            { id: 'nasdaq', name: 'NASDAQ', symbol: 'QQQ', icon: 'fa-microchip' },
-            { id: 'dow', name: 'Dow Jones', symbol: 'DIA', icon: 'fa-industry' },
-            { id: 'nyse', name: 'NYSE', symbol: 'NYA', icon: 'fa-building' },
-            { id: 'ftse', name: 'FTSE 100', symbol: 'UKX', icon: 'fa-crown' },
-            { id: 'nikkei', name: 'Nikkei 225', symbol: 'NKY', icon: 'fa-yen-sign' }
+            { id: 'sp500', name: 'S&P 500', symbol: 'SPY', icon: 'fa-chart-bar', baseValue: 4500 },
+            { id: 'nasdaq', name: 'NASDAQ', symbol: 'QQQ', icon: 'fa-microchip', baseValue: 380 },
+            { id: 'dow', name: 'Dow Jones', symbol: 'DIA', icon: 'fa-industry', baseValue: 350 },
+            { id: 'nyse', name: 'NYSE', symbol: 'NYA', icon: 'fa-building', baseValue: 16000 },
+            { id: 'ftse', name: 'FTSE 100', symbol: 'UKX', icon: 'fa-crown', baseValue: 7500 },
+            { id: 'nikkei', name: 'Nikkei 225', symbol: 'NKY', icon: 'fa-yen-sign', baseValue: 28000 }
         ];
 
         // Initialize market data
@@ -430,16 +653,30 @@
         markets.forEach(market => {
             marketData[market.id] = {
                 ...market,
-                currentValue: 0,
+                currentValue: market.baseValue,
                 change: 0,
                 changePercent: 0,
-                history: [],
-                lastUpdated: null
+                history: generateInitialHistory(market.baseValue, 50),
+                lastUpdated: null,
+                previousValue: market.baseValue,
+                error: null
             };
         });
 
+        // Generate initial history
+        function generateInitialHistory(baseValue, points) {
+            const history = [];
+            let value = baseValue;
+            for (let i = 0; i < points; i++) {
+                value += (Math.random() - 0.5) * baseValue * 0.01;
+                history.push(value);
+            }
+            return history;
+        }
+
         // API Configuration
         let apiKey = localStorage.getItem('alphaVantageApiKey') || '';
+        let useDemoMode = false;
         const API_BASE_URL = 'https://www.alphavantage.co/query';
 
         // Check for API key
@@ -468,11 +705,23 @@
                                maxlength="20">
                         <button class="save-key-btn" onclick="saveApiKey()">Save Key</button>
                     </div>
+                    <div style="margin-top: 1rem;">
+                        <button class="save-key-btn" onclick="startDemoMode()" style="background: rgba(255,255,255,0.1);">
+                            Continue with Demo Data
+                        </button>
+                    </div>
                     <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
                         Get your free API key at: <a href="https://www.alphavantage.co/support/#api-key" target="_blank" style="color: #4ade80;">alphavantage.co</a>
                     </p>
                 </div>
             `;
+        }
+
+        // Start demo mode
+        function startDemoMode() {
+            useDemoMode = true;
+            document.getElementById('demoMode').style.display = 'block';
+            initializeDashboard();
         }
 
         // Save API key
@@ -481,12 +730,29 @@
             if (input && input.value) {
                 apiKey = input.value.trim();
                 localStorage.setItem('alphaVantageApiKey', apiKey);
+                useDemoMode = false;
+                document.getElementById('demoMode').style.display = 'none';
                 initializeDashboard();
             }
         }
 
         // Fetch real market data
         async function fetchMarketData(symbol) {
+            if (useDemoMode) {
+                // Return simulated data in demo mode
+                const market = markets.find(m => m.symbol === symbol);
+                if (market) {
+                    const data = marketData[market.id];
+                    const change = (Math.random() - 0.5) * data.currentValue * 0.02;
+                    return {
+                        price: data.currentValue + change,
+                        change: change,
+                        changePercent: (change / data.currentValue) * 100
+                    };
+                }
+                throw new Error('Market not found');
+            }
+
             try {
                 const response = await fetch(`${API_BASE_URL}?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`);
                 const data = await response.json();
@@ -500,6 +766,8 @@
                     };
                 } else if (data['Error Message']) {
                     throw new Error(data['Error Message']);
+                } else if (data['Information']) {
+                    throw new Error(data['Information']);
                 } else {
                     throw new Error('Invalid API response');
                 }
@@ -511,6 +779,16 @@
 
         // Fetch historical data
         async function fetchHistoricalData(symbol, period = '1W') {
+            if (useDemoMode) {
+                // Return simulated historical data in demo mode
+                const market = markets.find(m => m.symbol === symbol);
+                if (market) {
+                    const data = marketData[market.id];
+                    return generateInitialHistory(data.currentValue, 50);
+                }
+                return [];
+            }
+
             try {
                 let interval = '60min';
                 let outputsize = '24';
@@ -544,6 +822,10 @@
                     });
                     
                     return history;
+                } else if (data['Error Message']) {
+                    throw new Error(data['Error Message']);
+                } else if (data['Information']) {
+                    throw new Error(data['Information']);
                 } else {
                     throw new Error('No historical data available');
                 }
@@ -553,20 +835,50 @@
             }
         }
 
+        // Update live ticker
+        function updateTicker() {
+            const ticker = document.getElementById('liveTicker');
+            ticker.innerHTML = '';
+            
+            markets.forEach(market => {
+                const data = marketData[market.id];
+                if (data.currentValue > 0) {
+                    const item = document.createElement('div');
+                    item.className = 'ticker-item';
+                    const isPositive = data.change >= 0;
+                    item.innerHTML = `
+                        <i class="fas fa-arrow-${isPositive ? 'up' : 'down'} ${isPositive ? 'positive' : 'negative'}"></i>
+                        <strong>${market.name}:</strong> ${formatNumber(data.currentValue)} 
+                        <span class="${isPositive ? 'positive' : 'negative'}">
+                            (${data.changePercent > 0 ? '+' : ''}${data.changePercent.toFixed(2)}%)
+                        </span>
+                    `;
+                    ticker.appendChild(item);
+                }
+            });
+            
+            // Duplicate for seamless scrolling
+            ticker.innerHTML += ticker.innerHTML;
+        }
+
         // Update markets with real data
         async function updateMarkets() {
-            if (!checkApiKey()) return;
+            if (!checkApiKey() && !useDemoMode) return;
             
             try {
                 const promises = markets.map(async (market) => {
                     try {
                         const data = await fetchMarketData(market.symbol);
+                        const previousValue = marketData[market.id].currentValue;
+                        
                         marketData[market.id] = {
                             ...marketData[market.id],
+                            previousValue: previousValue,
                             currentValue: data.price,
                             change: data.change,
                             changePercent: data.changePercent,
-                            lastUpdated: new Date()
+                            lastUpdated: new Date(),
+                            error: null
                         };
                         
                         // Fetch historical data
@@ -576,6 +888,23 @@
                         }
                     } catch (error) {
                         console.error(`Error updating ${market.name}:`, error);
+                        marketData[market.id].error = error.message;
+                        
+                        // Keep using previous data in case of error
+                        if (useDemoMode) {
+                            // In demo mode, simulate some movement
+                            const data = marketData[market.id];
+                            const change = (Math.random() - 0.5) * data.currentValue * 0.02;
+                            marketData[market.id].currentValue += change;
+                            marketData[market.id].change = change;
+                            marketData[market.id].changePercent = (change / (data.currentValue - change)) * 100;
+                            
+                            // Update history
+                            marketData[market.id].history.push(marketData[market.id].currentValue);
+                            if (marketData[market.id].history.length > 50) {
+                                marketData[market.id].history.shift();
+                            }
+                        }
                     }
                 });
                 
@@ -585,13 +914,14 @@
                 updateMainChart();
                 updateStats();
                 updateLastUpdateTime();
+                updateTicker();
                 hideError();
             } catch (error) {
                 showError('Failed to fetch market data. Please check your API key.');
             }
         }
 
-        // Render market cards
+        // Render market cards with movement animation
         function renderMarketCards() {
             const grid = document.getElementById('marketsGrid');
             grid.innerHTML = '';
@@ -599,10 +929,12 @@
             markets.forEach(market => {
                 const data = marketData[market.id];
                 const isPositive = data.change >= 0;
+                const isMoving = data.previousValue !== data.currentValue;
                 
                 const card = document.createElement('div');
-                card.className = 'market-card';
+                card.className = `market-card ${isMoving ? 'updating' : ''}`;
                 card.innerHTML = `
+                    ${isMoving ? `<div class="movement-indicator ${isPositive ? 'up' : 'down'}"></div>` : ''}
                     <div class="market-header">
                         <div class="market-name">
                             <div class="market-icon">
@@ -617,6 +949,7 @@
                         <span>${Math.abs(data.changePercent).toFixed(2)}%</span>
                         <span>(${formatNumber(Math.abs(data.change))})</span>
                     </div>
+                    ${data.error ? `<div class="market-error"><i class="fas fa-exclamation-circle"></i> ${data.error}</div>` : ''}
                     <div class="chart-container">
                         <canvas id="chart-${market.id}"></canvas>
                     </div>
@@ -850,6 +1183,7 @@
                         }
                     } catch (error) {
                         console.error(`Error fetching historical data for ${market.name}:`, error);
+                        marketData[market.id].error = error.message;
                     }
                 });
                 
@@ -862,7 +1196,7 @@
 
         // Initialize dashboard
         async function initializeDashboard() {
-            if (checkApiKey()) {
+            if (checkApiKey() || useDemoMode) {
                 await updateMarkets();
                 createMainChart();
             }
@@ -873,6 +1207,9 @@
 
         // Auto-update every 30 seconds (respecting API rate limits)
         setInterval(updateMarkets, 30000);
+
+        // Update ticker every 5 seconds
+        setInterval(updateTicker, 5000);
     </script>
 </body>
 </html>
